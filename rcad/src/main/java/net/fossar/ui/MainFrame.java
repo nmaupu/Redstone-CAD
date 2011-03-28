@@ -31,7 +31,6 @@ public class MainFrame extends JFrame {
 		// Set and organize main layout
 		pane.setLayout(layout);
 		
-		
 		// Viewport
 		JPanel p = new JPanel();
 		JScrollPane sp = new JScrollPane(p);

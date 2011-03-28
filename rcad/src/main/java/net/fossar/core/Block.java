@@ -1,13 +1,9 @@
 package net.fossar.core;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.List;
-
-import net.fossar.ui.ViewportLabel;
 
 public enum Block {
 	
@@ -37,77 +33,16 @@ public enum Block {
 		return backgroundColor;
 	}
 	
-	public boolean isAir()        { return this == AIR || this == SHADOW; }
-	public boolean isController() { return this == LEVER || this == P_PLATE; }
-	public boolean isBlock()      { return this == BLOCK; }
-	public boolean isOn()         { return isOn; }
-	public boolean isOff()        { return ! isOn(); }
+	public boolean isAir()          { return this == AIR || this == SHADOW;    }
+	public boolean isController()   { return this == LEVER || this == P_PLATE; }
+	public boolean isBlock()        { return this == BLOCK;                    }
+	public boolean isPowered()      { return isOn;                             }
+	public boolean isUnpowered()    { return ! isPowered();                    }
+	public boolean getPower()       { return isOn;                             }
+	public void power()             { setPower(true);                          }
+	public void unpower()           { setPower(false);                         }
+	public void setPower(boolean b) { isOn = b;                                }
 	
-	public void paint(ViewportLabel parent, DataGrid grid, Graphics g1) {
-		Graphics2D g = (Graphics2D)g1;
-		
-		// anti aliasing
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		
-		System.out.println("paint Block state"+this);
-		parent.setBackground(getBackgroundColor());
-
-		// width == height
-		int width = parent.getWidth();
-		List<Direction> dir = null;
-		
-		switch(this) {
-		case TORCH:
-			// Drawing a torch
-			dir = getAdjacentStatesDirection(grid, parent.getRow(), parent.getCol(), parent.getLay(), BLOCK);
-			Direction d = dir != null && dir.size() > 0 ? dir.get(0) : Direction.UNDEF;
-			
-			drawTorch(g, d, width);
-			
-			break;
-		case WIRE:
-			//List<Direction> dirBlock = getAdjacentStatesDirection(grid, parent.getRow(), parent.getCol(), parent.getLay(), BLOCK);
-			List<Direction> dirWire  = getAdjacentStatesDirection(grid, parent.getRow(), parent.getCol(), parent.getLay(), WIRE);
-			
-			//drawWire(g, dirBlock, width);
-			drawWire(g, dirWire, width);
-			
-			break;
-		}
-	}
-	
-	/**
-	 * Indicates if given coordinates data has an adjacent data corresponding to a given Block
-	 * @param grid
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param state
-	 * @return True if there is an adjacent state corresponding to a given Block, false otherwise
-	 */
-	public static boolean hasAdjacentState(DataGrid grid, int r, int c, int l, Block state) {
-		List<Direction> res = getAdjacentStatesDirection(grid, r, c, l, state);
-		return res != null;
-	}
-	
-	public static List<Direction> getAdjacentStatesDirection(DataGrid grid, int r, int c, int l, Block state) {
-		List<Direction> res = new ArrayList<Direction>();
-		
-		if 		(r < grid.getRows()-1 && grid.getState(r+1, c, l) == state)
-			res.add(Direction.DOWN);
-		if	(r > 0 && grid.getState(r-1, c, l) == state)
-			res.add(Direction.UP);
-		if (c < grid.getCols()-1 && grid.getState(r, c+1, l) == state)
-			res.add(Direction.RIGHT);
-		if (c > 0 && grid.getState(r, c-1, l) == state)
-			res.add(Direction.LEFT);
-		if (l < grid.getLayers()-1 && grid.getState(r, c, l+1) == state)
-			res.add(Direction.ABOVE);
-		if (l > 0 && grid.getState(r, c, l-1) == state)
-			res.add(Direction.BELOW);
-		
-		return res.size() == 0 ? null : res;
-	}
 	
 	public void drawTorch(Graphics2D g, Direction dir, int width) {
 		int rectS = width/7 * 2;
@@ -136,7 +71,7 @@ public enum Block {
 		g.fillRect(x, y, w, h);
 		
 		// Oval in center
-		Color c = isOn() ? Colors.COLOR_WIRE_ON : Colors.COLOR_WIRE_OFF;
+		Color c = isPowered() ? Colors.COLOR_WIRE_ON : Colors.COLOR_WIRE_OFF;
 		g.setColor(c);
 		x = width/2 - width/4;
 		y = width/2 - width/4;
@@ -147,7 +82,7 @@ public enum Block {
 	
 	public void drawWire(Graphics2D g, List<Direction> dirs, int width) {
 		
-		Color c = isOn() ? Colors.COLOR_WIRE_ON : Colors.COLOR_WIRE_OFF;
+		Color c = isPowered() ? Colors.COLOR_WIRE_ON : Colors.COLOR_WIRE_OFF;
 		g.setColor(c);
 		List<Direction> ds = dirs == null || dirs.size() == 0 ? new ArrayList<Direction>() : dirs ;
 		

@@ -7,8 +7,12 @@ import javax.swing.JButton;
 
 import net.fossar.core.Block;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @SuppressWarnings("serial")
 public class BlockChanger extends AbstractAction {
+	private static Logger logger = LoggerFactory.getLogger(BlockChanger.class);
 	private Block blockType = Block.AIR;
 	
 	public static final String ACTION_BLOCK = "block";
@@ -33,7 +37,7 @@ public class BlockChanger extends AbstractAction {
 			else if (cmd.equals(ACTION_TORCH))
 				blockType = Block.TORCH;
 			
-			System.out.println(cmd);
+			logger.debug("ActionPerformed - cmd="+cmd);
 		}
 	}
 	

@@ -6,10 +6,14 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.fossar.ui.action.BlockChanger;
 
 @SuppressWarnings("serial")
 public class MainToolBar extends JToolBar implements ActionListener {
+	private Logger logger = LoggerFactory.getLogger(MainToolBar.class);
 	private BlockChanger actionPerformer = new BlockChanger();
 	private JButton blockButton = new JButton(actionPerformer);
 	private JButton airButton   = new JButton(actionPerformer);
@@ -54,7 +58,7 @@ public class MainToolBar extends JToolBar implements ActionListener {
 		JButton b = (JButton)e.getSource();
 		if(b.getActionCommand().equals("update")) {
 			// update circuitry
-			System.out.println("updating circuitry ...");
+			logger.info("Updating circuitry");
 		}
 			
 	}
