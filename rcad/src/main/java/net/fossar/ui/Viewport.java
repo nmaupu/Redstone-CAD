@@ -1,9 +1,7 @@
 package net.fossar.ui;
 
-import java.awt.Dimension;
 import java.awt.GridLayout;
 
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import net.fossar.core.DataGrid;
@@ -15,33 +13,32 @@ import org.slf4j.LoggerFactory;
 public class Viewport extends JPanel {
 	@SuppressWarnings("unused")
 	private Logger logger = LoggerFactory.getLogger(Viewport.class);
-	private DataGrid grid;
-	private ViewportLabel[][] labels;
-	private int displayedLayer;
 	
-	public Viewport(DataGrid grid) {
+	private DataGrid grid;
+	private ViewportLabel[][] labels = null;
+	private int layerIdx = 0;
+	
+	public Viewport(DataGrid grid, int layerIdx) {
 		this.grid = grid;
-		this.displayedLayer = 0;
+		this.layerIdx = layerIdx;
 		
 		super.setLayout(new GridLayout(grid.getRows(), grid.getCols()));
-		super.setPreferredSize(new Dimension(
-									grid.getCols()*ViewportLabel.LABEL_WIDTH, 
-									grid.getRows()*ViewportLabel.LABEL_WIDTH));
-		super.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		initLabels();
+	}
+	
+	private void initLabels() {
+		if (labels == null)
+			labels = new ViewportLabel[grid.getRows()][grid.getCols()];
 		
-		setDisplayedLayer(displayedLayer);
+		for(int i=0; i<grid.getRows(); i++) {
+			for(int j=0; j<grid.getCols(); j++) {
+				labels[i][j] = grid.getLabels()[i][j][layerIdx];
+				super.add(labels[i][j]);
+			}
+		}
 	}
 	
-	public void repaintViewport() {
-		for(int i=0; i<grid.getRows(); i++)
-			for(int j=0; j<grid.getCols(); j++)
-				grid.getLabels()[i][j][displayedLayer].repaint();
-	}
-	
-	public int getDisplayedLayer() {
-		return displayedLayer;
-	}
-	
+	/*
 	public void setDisplayedLayer(int layer) {
 		super.removeAll();
 		
@@ -54,5 +51,10 @@ public class Viewport extends JPanel {
 				super.add(labels[i][j]);
 			}
 		}
+	}
+	*/
+	
+	public int getLayerId() {
+		return layerIdx;
 	}
 }

@@ -1,11 +1,10 @@
 package net.fossar.ui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -23,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("serial")
-public class ViewportLabel extends JLabel implements MouseListener {
+public class ViewportLabel extends JLabel {
 	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(ViewportLabel.class);
 	public static final Color HOVER_COLOR      = Color.ORANGE;
@@ -40,11 +39,11 @@ public class ViewportLabel extends JLabel implements MouseListener {
 		this.lay = lay;
 		this.grid = grid;
 		
-		this.setSize(LABEL_WIDTH, LABEL_WIDTH);
+		this.setPreferredSize(new Dimension(LABEL_WIDTH, LABEL_WIDTH));
 		this.setBounds(0, 0, LABEL_WIDTH, LABEL_WIDTH);
 				
 		this.setOpaque(true);
-		this.addMouseListener(this);
+		//this.addMouseListener(this);
 
 		int top = BORDER_WIDTH;
 		int bottom = BORDER_WIDTH;
@@ -69,26 +68,6 @@ public class ViewportLabel extends JLabel implements MouseListener {
 	public Block getState() {
 		return state;
 	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {}
-	
-	@Override
-	public void mouseExited(MouseEvent e) {}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-	}
-	
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		this.setState(MainFrame.mainToolBar.getActionPerformer().getBlockType());
-		this.repaint();
-		this.repaintAdjacents();
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {}
 	
 	@Override
 	public void paintComponent(Graphics g1) {
@@ -142,6 +121,7 @@ public class ViewportLabel extends JLabel implements MouseListener {
 		if (c<grid.getCols() - 1)
 			grid.getLabels()[r][c+1][l].repaint();
 	}
+	
 	// Not yet functional
 	public void updateCircuitry() {
 		if(state != Block.AIR && state != Block.SHADOW) {
