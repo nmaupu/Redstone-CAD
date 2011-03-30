@@ -1,7 +1,9 @@
 package net.fossar.core.block;
 
 import junit.framework.TestCase;
-import net.fossar.core.clock.Clock;
+import net.fossar.model.core.block.AbstractBlock;
+import net.fossar.model.core.block.Block;
+import net.fossar.model.core.clock.Clock;
 
 /**
  * Created by IntelliJ IDEA.

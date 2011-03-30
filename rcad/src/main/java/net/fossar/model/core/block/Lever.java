@@ -1,6 +1,6 @@
-package net.fossar.core.block;
+package net.fossar.model.core.block;
 
-import net.fossar.core.Direction;
+import net.fossar.model.Direction;
 
 import java.util.Map;
 

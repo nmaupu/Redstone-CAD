@@ -1,5 +1,7 @@
 package net.fossar.core.block;
 
+import net.fossar.model.core.block.AbstractBlock;
+import net.fossar.model.core.block.Wire;
 import junit.framework.TestCase;
 
 

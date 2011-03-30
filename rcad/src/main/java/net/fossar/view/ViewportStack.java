@@ -1,4 +1,4 @@
-package net.fossar.ui;
+package net.fossar.view;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -10,37 +10,40 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
-import net.fossar.core.DataGrid;
+import net.fossar.model.DataGrid;
+import net.fossar.model.core.block.AbstractBlock;
+import net.fossar.presenter.Director;
+import net.fossar.presenter.Presenter;
+import net.fossar.view.action.BlockChanger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ViewportStack extends JPanel implements MouseInputListener {
+public class ViewportStack extends JPanel implements View, MouseInputListener {
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = LoggerFactory.getLogger(ViewportStack.class);
 	
-	public static int DEFAULT_ROWS=20;
-	public static int DEFAULT_COLS=30;
-	public static int DEFAULT_LAYERS=10;
+	private Presenter presenter;
 	
 	private List<Viewport> viewports = null;
-	private DataGrid dataGrid = new DataGrid(DEFAULT_ROWS, DEFAULT_COLS, DEFAULT_LAYERS);
+	private DataGrid dataGrid = null;
 	private CardLayout layout = new CardLayout();
 	private int currentLayer = 0;
 	
-	private MainFrame parent;
-	
-	public ViewportStack(MainFrame parent) {
+	public ViewportStack(Presenter presenter) {
 		super();
+		this.presenter = presenter;
+		
+		dataGrid = (DataGrid) presenter.getModel(Director.DATAGRID);
+		
 		super.setLayout(layout);
-		this.parent = parent;
 		
 		viewports = new ArrayList<Viewport>();
 		
 		int layers = dataGrid.getLayers();
 		for (int i=0; i<layers; i++) {
-			Viewport v = new Viewport(dataGrid, i);
+			Viewport v = new Viewport(presenter, i);
 			viewports.add(v);
 			super.add(v, String.valueOf(i));
 			v.addMouseListener(this);
@@ -82,7 +85,7 @@ public class ViewportStack extends JPanel implements MouseInputListener {
 	}
 	
 	private void updateViewportLabelState(double dx, double dy) {
-		Dimension dim = dataGrid.getLabels()[0][0][currentLayer].getSize();
+		Dimension dim = viewports.get(currentLayer).getViewportLabel(0, 0).getSize();
 		int labelW = (int)dim.getWidth();
 		int labelH = (int)dim.getHeight();
 		int x = (int)dx;
@@ -92,11 +95,37 @@ public class ViewportStack extends JPanel implements MouseInputListener {
 		int c = (int)(x / labelW);
 		
 		if (r >= 0 && r <= dataGrid.getRows()-1 && c >= 0 && c <= dataGrid.getCols()-1) {
-			ViewportLabel label = dataGrid.getLabels()[r][c][currentLayer];
-			label.getBlock().setType(parent.mainToolBar.getActionPerformer().getBlockType());
+			ViewportLabel label = viewports.get(currentLayer).getViewportLabel(r, c);
+			AbstractBlock newBlock = BlockChanger.getBlock();
+			dataGrid.getBlock(r, c, currentLayer).setBlock(newBlock);
+			// TODO Repaint by strategy ?
 			label.repaint();
-			label.repaintAdjacents();
+			this.repaintAdjacents(label);
 		}
+	}
+	
+	/*
+	 * TODO Use strategy to repaint a component
+	 */
+	public void repaintAdjacents(ViewportLabel label) {
+		if (dataGrid == null)
+			return;
+		
+		int r = label.getDataBlock().getRow();
+		int c = label.getDataBlock().getCol();
+		int l = label.getDataBlock().getLay();
+		
+		if (r>0)
+			viewports.get(l).getViewportLabel(r-1, c).repaint();
+		
+		if (r<dataGrid.getRows() - 1)
+			viewports.get(l).getViewportLabel(r+1, c).repaint();
+		
+		if (c>0)
+			viewports.get(l).getViewportLabel(r, c-1).repaint();
+		
+		if (c<dataGrid.getCols() - 1)
+			viewports.get(l).getViewportLabel(r, c+1).repaint();
 	}
 
 	@Override
