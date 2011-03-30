@@ -1,10 +1,10 @@
 package net.fossar.core.block;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import net.fossar.core.Direction;
-import net.fossar.core.clock.Clock;
 import net.fossar.core.clock.Time;
 
 public abstract class AbstractBlock {
@@ -15,12 +15,13 @@ public abstract class AbstractBlock {
 	
 	protected int power = 0;
 	Direction direction = Direction.UNDEF;
+	protected List<BlockPowerListener> listeners = null; 
 	
 	private int powerToInject = 0;
 	private long delay = 0;
 	private Time lastUpdate = new Time();
 	
-	public abstract void doUpdate(Map<Direction, Block> adjacentBlocks);
+	public abstract void doUpdate(Map<Direction, AbstractBlock> adjacentBlocks);
 	
 	public AbstractBlock(int power, int delay) {
 		this.power = power;
@@ -36,6 +37,9 @@ public abstract class AbstractBlock {
 		if(lastUpdate.isExpired(delay)) {
 			power = powerToInject;
 			lastUpdate = new Time();
+			
+			// Notify listeners
+			dispatchEventPowerChange();
 		}
 		
 		return power;
@@ -54,5 +58,17 @@ public abstract class AbstractBlock {
 	}
 	public boolean isUnpowered() {
 		return power == 0;
+	}
+	
+	protected void dispatchEventPowerChange() {
+		for(BlockPowerListener l : listeners)
+			l.powerChange(this);
+	}
+	
+	public void addBlockPowerListener(BlockPowerListener listener) {
+		if(listeners == null)
+			listeners = new ArrayList<BlockPowerListener>();
+		
+		listeners.add(listener);
 	}
 }
