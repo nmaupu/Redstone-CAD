@@ -32,7 +32,6 @@ public abstract class AbstractBlock {
 	}
 	
 	public int getOutput() {
-		long currentTime = Clock.currentTime();
 		if(lastUpdate.isExpired(delay)) {
 			power = powerToInject;
 			lastUpdate = new Time();
