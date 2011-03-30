@@ -20,8 +20,17 @@ public class Lever extends AbstractBlock {
 	
 	@Override
 	public void doUpdate(Map<Direction, AbstractBlock> adjacentBlocks) {
-		// TODO Auto-generated method stub
-		
+
+        for (Map.Entry<Direction, AbstractBlock> entry : adjacentBlocks.entrySet()) {
+            AbstractBlock block = entry.getValue();
+            block.setInput(getOutput());
+            if(block instanceof Wire){
+
+            }
+            
+            
+        }
+
 	}
 
 }

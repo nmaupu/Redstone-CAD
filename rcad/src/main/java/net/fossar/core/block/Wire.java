@@ -18,7 +18,6 @@ public class Wire extends AbstractBlock {
     @Override
     public void doUpdate(Map<Direction, AbstractBlock> adjacentBlocks) {
         
-
     }
 
 }
