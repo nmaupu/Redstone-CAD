@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 import net.fossar.core.AdjacentBlocks;
 import net.fossar.core.Direction;
 import net.fossar.core.clock.Clock;
+import net.fossar.core.grid.DataGrid;
 
 import org.mockito.Mockito;
 
@@ -32,7 +33,7 @@ public class BlockTest extends TestCase {
 	public void testUpdate() throws Exception {
 		Block block = new Block();
 
-		AdjacentBlocks adjacentBlocks = new AdjacentBlocks();
+		AdjacentBlocks adjacentBlocks = new AdjacentBlocks(new DataGrid(0, 0, 0));
 		Wire wire = Mockito.mock(Wire.class);
 		Block block2 = Mockito.mock(Block.class);
 		Torch torch = Mockito.mock(Torch.class);

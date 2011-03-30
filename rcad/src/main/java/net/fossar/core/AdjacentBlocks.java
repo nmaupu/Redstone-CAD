@@ -1,16 +1,25 @@
 package net.fossar.core;
 
-import net.fossar.core.block.AbstractBlock;
-
 import java.util.HashMap;
+import java.util.Map;
+
+import net.fossar.core.block.AbstractBlock;
+import net.fossar.core.grid.DataGrid;
 
 /**
  */
 public class AdjacentBlocks extends HashMap<Direction, AbstractBlock> {
-    protected DataGrid datagrid; 
+	protected DataGrid datagrid;
 
-    public AdjacentBlocks getAdjacents(AbstractBlock block) {
+	public AdjacentBlocks(DataGrid datagrid) {
+		this.datagrid = datagrid;
+	}
 
-        return null;  //To change body of created methods use File | Settings | File Templates.
-    }
+	public AdjacentBlocks getAdjacents(AbstractBlock block) {
+		Map<Direction, AbstractBlock> adjacentStatesDirection = datagrid.getAdjacentStatesDirection(block);
+		AdjacentBlocks result = new AdjacentBlocks(datagrid);
+		result.putAll(adjacentStatesDirection);
+
+		return result;
+	}
 }
