@@ -3,6 +3,8 @@ package net.fossar.core.block;
 import java.util.Date;
 
 import net.fossar.core.Direction;
+import net.fossar.core.clock.Clock;
+import net.fossar.core.clock.Time;
 
 public abstract class AbstractBlock {
 	public static final int PROPAGATION_DELAY=20;
@@ -15,7 +17,7 @@ public abstract class AbstractBlock {
 	
 	private int powerToInject = 0;
 	private long delay = 0;
-	private Date lastUpdate = new Date();
+	private Time lastUpdate = new Time();
 	
 	public abstract void doUpdate();
 	
@@ -30,10 +32,10 @@ public abstract class AbstractBlock {
 	}
 	
 	public int getOutput() {
-		long currentTime = System.currentTimeMillis();
-		if(lastUpdate.getTime() - delay > currentTime) {
+		long currentTime = Clock.currentTime();
+		if(lastUpdate.isExpired(delay)) {
 			power = powerToInject;
-			lastUpdate = new Date(currentTime);
+			lastUpdate = new Time();
 		}
 		
 		return power;
