@@ -2,8 +2,9 @@ package net.fossar.core.clock;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import org.junit.Ignore;
 
-
+@Ignore
 public class TimeTest extends TestCase {
     public void testGetTime() throws Exception {
         long l = Clock.currentTime();
