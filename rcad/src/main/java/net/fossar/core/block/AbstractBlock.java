@@ -2,7 +2,6 @@ package net.fossar.core.block;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import net.fossar.core.AdjacentBlocks;
 import net.fossar.core.Direction;
@@ -13,6 +12,10 @@ public abstract class AbstractBlock {
 	public static final int POWER_OFF = 0;
 	public static final int POWER_MAX = 15;
 	public static final int POWER_SOURCE = POWER_MAX + 1;
+
+	private int row;
+	private int col;
+	private int layer;
 
 	protected int power = 0;
 	Direction direction = Direction.UNDEF;
@@ -79,4 +82,29 @@ public abstract class AbstractBlock {
 
 		listeners.add(listener);
 	}
+
+	public void setRow(int row) {
+		this.row = row;
+	}
+
+	public int getRow() {
+		return row;
+	}
+
+	public void setCol(int col) {
+		this.col = col;
+	}
+
+	public int getCol() {
+		return col;
+	}
+
+	public void setLayer(int layer) {
+		this.layer = layer;
+	}
+
+	public int getLayer() {
+		return layer;
+	}
+
 }
