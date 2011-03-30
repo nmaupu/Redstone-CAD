@@ -1,5 +1,9 @@
 package net.fossar.core.block;
 
+import net.fossar.core.Direction;
+
+import java.util.Map;
+
 public class Lever extends AbstractBlock {
 
 	public Lever() {
@@ -15,7 +19,7 @@ public class Lever extends AbstractBlock {
 	}
 	
 	@Override
-	public void doUpdate() {
+	public void doUpdate(Map<Direction, Block> adjacentBlocks) {
 		// TODO Auto-generated method stub
 		
 	}

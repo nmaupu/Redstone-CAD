@@ -1,5 +1,9 @@
 package net.fossar.core.block;
 
+import net.fossar.core.Direction;
+
+import java.util.Map;
+
 public class Wire extends AbstractBlock {
 
     public Wire() {
@@ -12,8 +16,8 @@ public class Wire extends AbstractBlock {
     }
 
     @Override
-    public void doUpdate() {
-        // TODO Auto-generated method stub
+    public void doUpdate(Map<Direction, Block> adjacentBlocks) {
+        
 
     }
 

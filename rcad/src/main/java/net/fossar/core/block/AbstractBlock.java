@@ -1,6 +1,7 @@
 package net.fossar.core.block;
 
 import java.util.Date;
+import java.util.Map;
 
 import net.fossar.core.Direction;
 import net.fossar.core.clock.Clock;
@@ -19,7 +20,7 @@ public abstract class AbstractBlock {
 	private long delay = 0;
 	private Time lastUpdate = new Time();
 	
-	public abstract void doUpdate();
+	public abstract void doUpdate(Map<Direction, Block> adjacentBlocks);
 	
 	public AbstractBlock(int power, int delay) {
 		this.power = power;
