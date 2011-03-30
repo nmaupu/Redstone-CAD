@@ -1,23 +1,30 @@
 package net.fossar.core.block;
 
-import net.fossar.core.Direction;
-
 import java.util.Map;
 
-public class Wire extends AbstractBlock {
+import net.fossar.core.AdjacentBlocks;
+import net.fossar.core.Direction;
 
-    public Wire() {
-        super(POWER_OFF, 0);
-    }
+public class Wire extends AbstractBlock implements PassiveBlock {
 
-    @Override
-    public int getOutput() {
-        return super.getOutput() == 0 ? 0 : super.getOutput() - 1;
-    }
+	public Wire() {
+		super(POWER_OFF, 0);
+	}
 
-    @Override
-    public void doUpdate(Map<Direction, AbstractBlock> adjacentBlocks) {
-        
-    }
+	@Override
+	public int getOutput() {
+		return super.getOutput() == 0 ? 0 : super.getOutput() - 1;
+	}
+
+	@Override
+	public void doUpdate(AdjacentBlocks adjacentBlocks) {
+		for (Map.Entry<Direction, AbstractBlock> entry : adjacentBlocks.entrySet()) {
+			AbstractBlock block = entry.getValue();
+			if (block instanceof Wire) {
+				block.setInput(getOutput());
+				block.doUpdate(adjacentBlocks.getAdjacents(block));
+			}
+		}
+	}
 
 }

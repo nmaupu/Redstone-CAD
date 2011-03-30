@@ -1,32 +1,36 @@
 package net.fossar.core.block;
 
-import net.fossar.core.Direction;
-
 import java.util.Map;
 
-public class Lever extends AbstractBlock {
+import net.fossar.core.AdjacentBlocks;
+import net.fossar.core.Direction;
 
-    public Lever() {
-        super(POWER_OFF, 0);
-    }
+public class Lever extends AbstractBlock implements ActiveBlock {
 
-    public void powerOn() {
-        super.setInput(POWER_SOURCE);
-    }
+	public Lever() {
+		super(POWER_OFF, 0);
+	}
 
-    public void powerOff() {
-        super.setInput(POWER_OFF);
-    }
+	@Override
+	public void powerOn() {
+		super.setInput(POWER_SOURCE);
+	}
 
-    @Override
-    public void doUpdate(Map<Direction, AbstractBlock> adjacentBlocks) {
-        for (Map.Entry<Direction, AbstractBlock> entry : adjacentBlocks.entrySet()) {
-            AbstractBlock block = entry.getValue();
-            if (block instanceof Wire) {
-                block.setInput(getOutput());
-//                block.doUpdate(adjacentBlocks.getAdjacents(block));
-            }
-        }
-    }
+	@Override
+	public void powerOff() {
+		super.setInput(POWER_OFF);
+	}
+
+	@Override
+	public void doUpdate(AdjacentBlocks adjacentBlocks) {
+		for (Map.Entry<Direction, AbstractBlock> entry : adjacentBlocks.entrySet()) {
+			AbstractBlock block = entry.getValue();
+			if (block instanceof PassiveBlock) {
+				block.setInput(getOutput());
+				block.doUpdate(adjacentBlocks.getAdjacents(block));
+			}
+		}
+
+	}
 
 }

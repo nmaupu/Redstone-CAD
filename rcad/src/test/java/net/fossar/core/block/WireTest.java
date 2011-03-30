@@ -17,6 +17,6 @@ public class WireTest extends TestCase {
         assertEquals(0, wire.getOutput());
         wire.setInput(AbstractBlock.POWER_MAX);
         assertEquals(AbstractBlock.POWER_MAX  - 1, wire.getOutput());
-
     }
+
 }
