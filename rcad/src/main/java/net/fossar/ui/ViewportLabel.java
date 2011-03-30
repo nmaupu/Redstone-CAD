@@ -14,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
 import net.fossar.core.Block;
+import net.fossar.core.BlockType;
 import net.fossar.core.Colors;
 import net.fossar.core.DataGrid;
 import net.fossar.core.Direction;
@@ -28,7 +29,7 @@ public class ViewportLabel extends JLabel {
 	public static final Color HOVER_COLOR      = Color.ORANGE;
 	public static final int   LABEL_WIDTH      = 25;
 	public static final int   BORDER_WIDTH     = 1;
-	private Block state;
+	private Block block = new Block(BlockType.AIR);
 	private int row, col, lay;
 	private DataGrid grid;
 	
@@ -56,17 +57,10 @@ public class ViewportLabel extends JLabel {
 		if (col == grid.getCols() - 1) 	right  *= 2;
 		
 		this.setBorder(BorderFactory.createMatteBorder(top, left, bottom, right, Colors.COLOR_VIEWPORT_BORDERS));
-		
-		state = Block.AIR;
 	}
 	
-	public void setState(Block b) {
-		state = b;
-		setBackground(b.getBackgroundColor());
-	}
-	
-	public Block getState() {
-		return state;
+	public Block getBlock() {
+		return block;
 	}
 	
 	@Override
@@ -77,24 +71,24 @@ public class ViewportLabel extends JLabel {
 		// anti aliasing
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		setBackground(this.getState().getBackgroundColor());
+		setBackground(getBlock().getType().getBackgroundColor());
 
 		// width == height
 		int width = getWidth();
 		Map<Direction,Block> dirs = null;
 		
-		Block s = getState();
+		Block s = getBlock();
 		
-		switch(s) {
+		switch(s.getType()) {
 		case TORCH:
 			// Drawing a torch
-			dirs = grid.getAdjacentStatesDirection(this, EnumSet.of(Block.BLOCK));
+			dirs = grid.getAdjacentStatesDirection(this, EnumSet.of(BlockType.BLOCK));
 			Direction d = dirs != null && dirs.size() > 0 ? (Direction)dirs.entrySet().iterator().next().getKey() : Direction.UNDEF;
 			s.drawTorch(g, d, width);
 			break;
 		case WIRE:
 			// Wires connect to torches and wires
-			dirs = grid.getAdjacentStatesDirection(this, EnumSet.of(Block.WIRE, Block.TORCH));
+			dirs = grid.getAdjacentStatesDirection(this, EnumSet.of(BlockType.WIRE, BlockType.TORCH));
 			List<Direction> list = dirs != null && dirs.size() > 0 ? new ArrayList<Direction>(dirs.keySet()) : null;
 			s.drawWire(g, list, width);
 			break;
@@ -120,34 +114,6 @@ public class ViewportLabel extends JLabel {
 		
 		if (c<grid.getCols() - 1)
 			grid.getLabels()[r][c+1][l].repaint();
-	}
-	
-	// Not yet functional
-	public void updateCircuitry() {
-		if(state != Block.AIR && state != Block.SHADOW) {
-			// Get all adjacent blocks
-			Map<Direction, Block> adj = grid.getAdjacentStatesDirection(this, EnumSet.allOf(Block.class));
-			
-			// iterate through all blocks and set it on or off
-			for(Map.Entry<Direction, Block> entry : adj.entrySet()) {
-				Block b = entry.getValue();
-				
-				if (getState() == Block.BLOCK) {
-				    switch(b) {
-				    case AIR :
-				    case SHADOW :
-				    case BLOCK :
-				    	break;
-				    case WIRE :
-				    	
-				    	break;
-				    case TORCH :
-				    	b.setPower(! getState().getPower());
-				    	break;
-				    }
-				}
-			}
-		}
 	}
 	
 	public int getRow() {

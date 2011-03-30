@@ -25,7 +25,7 @@ public class ViewportStack extends JPanel implements MouseInputListener {
 	public static int DEFAULT_LAYERS=10;
 	
 	private List<Viewport> viewports = null;
-	private DataGrid grid = new DataGrid(DEFAULT_ROWS, DEFAULT_COLS, DEFAULT_LAYERS);
+	private DataGrid dataGrid = new DataGrid(DEFAULT_ROWS, DEFAULT_COLS, DEFAULT_LAYERS);
 	private CardLayout layout = new CardLayout();
 	private int currentLayer = 0;
 	
@@ -38,9 +38,9 @@ public class ViewportStack extends JPanel implements MouseInputListener {
 		
 		viewports = new ArrayList<Viewport>();
 		
-		int layers = grid.getLayers();
+		int layers = dataGrid.getLayers();
 		for (int i=0; i<layers; i++) {
-			Viewport v = new Viewport(grid, i);
+			Viewport v = new Viewport(dataGrid, i);
 			viewports.add(v);
 			super.add(v, String.valueOf(i));
 			v.addMouseListener(this);
@@ -70,19 +70,19 @@ public class ViewportStack extends JPanel implements MouseInputListener {
 	
 	public void lastLayer() {
 		layout.last(this);
-		currentLayer=grid.getLayers()-1;
+		currentLayer=dataGrid.getLayers()-1;
 	}
 
 	public List<Viewport> getViewports() {
 		return viewports;
 	}
 
-	public DataGrid getGrid() {
-		return grid;
+	public DataGrid getDataGrid() {
+		return dataGrid;
 	}
 	
 	private void updateViewportLabelState(double dx, double dy) {
-		Dimension dim = grid.getLabels()[0][0][currentLayer].getSize();
+		Dimension dim = dataGrid.getLabels()[0][0][currentLayer].getSize();
 		int labelW = (int)dim.getWidth();
 		int labelH = (int)dim.getHeight();
 		int x = (int)dx;
@@ -91,9 +91,9 @@ public class ViewportStack extends JPanel implements MouseInputListener {
 		int r = (int)(y / labelH);
 		int c = (int)(x / labelW);
 		
-		if (r >= 0 && r <= grid.getRows()-1 && c >= 0 && c <= grid.getCols()-1) {
-			ViewportLabel label = grid.getLabels()[r][c][currentLayer];
-			label.setState(parent.mainToolBar.getActionPerformer().getBlockType());
+		if (r >= 0 && r <= dataGrid.getRows()-1 && c >= 0 && c <= dataGrid.getCols()-1) {
+			ViewportLabel label = dataGrid.getLabels()[r][c][currentLayer];
+			label.getBlock().setType(parent.mainToolBar.getActionPerformer().getBlockType());
 			label.repaint();
 			label.repaintAdjacents();
 		}

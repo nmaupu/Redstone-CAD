@@ -7,11 +7,7 @@ public enum Direction {
 	DOWN(),
 	LEFT(),
 	RIGHT(),
-	UNDEF(),
-	UPRIGHT(),
-	UPLEFT(),
-	DOWNRIGHT(),
-	DOWNLEFT();
+	UNDEF();
 		
 	public boolean up()        { return this == UP;        }
 	public boolean down()      { return this == DOWN;      }
@@ -19,9 +15,23 @@ public enum Direction {
 	public boolean right()     { return this == RIGHT;     }
 	public boolean above()     { return this == ABOVE;     }
 	public boolean below()     { return this == BELOW;     }
-	public boolean upright()   { return this == UPRIGHT;   }
-	public boolean upleft()    { return this == UPLEFT;    }
-	public boolean downright() { return this == DOWNRIGHT; }
-	public boolean downleft()  { return this == DOWNLEFT;  }
 	public boolean undef()     { return this == UNDEF;     }
+	public Direction getOpposite() {		
+		switch(this) {
+		case ABOVE :
+			return BELOW;
+		case BELOW :
+			return ABOVE;
+		case UP :
+			return DOWN;
+		case DOWN :
+			return UP;
+		case LEFT :
+			return RIGHT;
+		case RIGHT :
+			return LEFT;
+		default :
+			return UNDEF;
+		}
+	}
 }

@@ -14,6 +14,7 @@ import net.fossar.ui.action.BlockChanger;
 @SuppressWarnings("serial")
 public class MainToolBar extends JToolBar implements ActionListener {
 	private Logger logger = LoggerFactory.getLogger(MainToolBar.class);
+	
 	private BlockChanger actionPerformer = new BlockChanger();
 	private JButton blockButton = new JButton(actionPerformer);
 	private JButton airButton   = new JButton(actionPerformer);
@@ -59,6 +60,7 @@ public class MainToolBar extends JToolBar implements ActionListener {
 		if(b.getActionCommand().equals("update")) {
 			// update circuitry
 			logger.info("Updating circuitry");
+			UIBuilder.mainFrame.getViewportStack().getDataGrid().updateCircuitrySources();
 		}
 			
 	}

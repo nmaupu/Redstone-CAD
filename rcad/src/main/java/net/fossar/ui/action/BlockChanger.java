@@ -6,6 +6,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 
 import net.fossar.core.Block;
+import net.fossar.core.BlockType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,7 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings("serial")
 public class BlockChanger extends AbstractAction {
 	private static Logger logger = LoggerFactory.getLogger(BlockChanger.class);
-	private Block blockType = Block.AIR;
+	private BlockType blockType = BlockType.AIR;
 	
 	public static final String ACTION_BLOCK = "block";
 	public static final String ACTION_AIR   = "air";
@@ -29,19 +30,19 @@ public class BlockChanger extends AbstractAction {
 			String cmd = b.getActionCommand();
 			
 			if (cmd.equals(ACTION_AIR))
-				blockType = Block.AIR;
+				blockType = BlockType.AIR;
 			else if (cmd.equals(ACTION_BLOCK))
-				blockType = Block.BLOCK;
+				blockType = BlockType.BLOCK;
 			else if (cmd.equals(ACTION_WIRE))
-				blockType = Block.WIRE;
+				blockType = BlockType.WIRE;
 			else if (cmd.equals(ACTION_TORCH))
-				blockType = Block.TORCH;
+				blockType = BlockType.TORCH;
 			
 			logger.debug("ActionPerformed - cmd="+cmd);
 		}
 	}
 	
-	public Block getBlockType() {
+	public BlockType getBlockType() {
 		return blockType;
 	}
 }

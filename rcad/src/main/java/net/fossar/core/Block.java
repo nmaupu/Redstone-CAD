@@ -5,49 +5,34 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
-public enum Block {
+public class Block {
+	private BlockType type;
+	private int power=BlockConstant.POWER_OFF;
+	private Direction direction = Direction.UNDEF;
 	
-	AIR(false, Colors.COLOR_AIR, "Air", BlockConstant.CONDUCT_AIR),
-	BLOCK(false, Colors.COLOR_BLOCK, "Block", BlockConstant.CONDUCT_BLOCK),
-	WIRE(false, Colors.COLOR_AIR, "Wire", BlockConstant.CONDUCT_WIRE),
-	TORCH(true, Colors.COLOR_AIR, "Torch", BlockConstant.CONDUCT_WIRE),
-	LEVER(false, Colors.COLOR_AIR, "Lever", BlockConstant.CONDUCT_WIRE),
-	P_PLATE(false, Colors.COLOR_AIR, "Pressure Plate", BlockConstant.CONDUCT_WIRE),
-	DOOR_O(false, Colors.COLOR_AIR, "Door", BlockConstant.CONDUCT_BLOCK),
-	DOOR_C(false, Colors.COLOR_AIR, "Door", BlockConstant.CONDUCT_BLOCK),
-	SHADOW(false, Colors.COLOR_SHADOW, "Shadow", BlockConstant.CONDUCT_AIR);
-	
-	String description;
-	Color backgroundColor;
-	int conductorType;
-	boolean isOn;
-	
-	private Block(boolean isOn, Color backgroundColor, String description, int conductorType) {
-		this.isOn = isOn;
-		this.backgroundColor = backgroundColor;
-		this.description = description;
-		this.conductorType = conductorType;
+	public Block(BlockType type, int power, Direction direction) {
+		this.type = type;
+		this.power = power;
+		this.direction = direction;
 	}
 	
-	public Color getBackgroundColor() {
-		return backgroundColor;
+	public Block(BlockType type) {
+		setType(type);
 	}
 	
-	public boolean isAir()          { return this == AIR || this == SHADOW;    }
-	public boolean isController()   { return this == LEVER || this == P_PLATE; }
-	public boolean isBlock()        { return this == BLOCK;                    }
-	public boolean isPowered()      { return isOn;                             }
-	public boolean isUnpowered()    { return ! isPowered();                    }
-	public boolean getPower()       { return isOn;                             }
-	public void power()             { setPower(true);                          }
-	public void unpower()           { setPower(false);                         }
-	public void setPower(boolean b) { isOn = b;                                }
-	
-	
+	/**
+	 * Draw a torch stick to adjacent block
+	 * @param g
+	 * @param dir
+	 * @param width
+	 */
 	public void drawTorch(Graphics2D g, Direction dir, int width) {
 		int rectS = width/7 * 2;
 		int rectB = width/2;
 		int x=0, y=0, w=0, h=0;
+		
+		// Torch pointing opposite direction of given dir
+		this.direction = dir == Direction.UNDEF ? Direction.ABOVE : dir.getOpposite();
 		
 		switch(dir) {
 		case UP :
@@ -137,10 +122,42 @@ public enum Block {
 			g.fillRect(x, y, w, h);
 		}
 	}
-}
+	
+	
+	public boolean isPowered()      { return power > 0; }
+	public boolean isUnpowered()    { return power == 0; }
+	public boolean getPowerStatus() { return isPowered(); }
+	public void poweroff()          { setPower(BlockConstant.POWER_OFF); }
+	public void poweron()           { setPower(BlockConstant.POWER_SOURCE); }
 
-abstract class BlockConstant {
-	public static final int CONDUCT_AIR   = 0;
-	public static final int CONDUCT_BLOCK = 1;
-	public static final int CONDUCT_WIRE  = 2;
+	public BlockType getType() {
+		return type;
+	}
+
+	public int getPower() {
+		return power;
+	}
+
+	public Direction getDirection() {
+		return direction;
+	}
+
+	public void setType(BlockType type) {
+		if(type == BlockType.TORCH)
+			this.power = BlockConstant.POWER_SOURCE;
+		else
+			this.power = BlockConstant.POWER_OFF;
+		
+		this.type = type;
+	}
+
+	public void setPower(int power) {
+		this.power = power;
+	}
+
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
+	
+	
 }

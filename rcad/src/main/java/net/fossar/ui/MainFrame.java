@@ -22,7 +22,6 @@ public class MainFrame extends JFrame {
 	public static final String APPNAME="Redstone CAD";
 	public static final int DEFAULT_WIDTH=800;
 	public static final int DEFAULT_HEIGHT=600;
-	private List<Viewport> viewports = new ArrayList<Viewport>();
 	public final MainToolBar mainToolBar = new MainToolBar();
 	
 	private ViewportStack viewportStack = new ViewportStack(this);
@@ -52,7 +51,7 @@ public class MainFrame extends JFrame {
 		super.setVisible(false);
 	}
 	
-	public List<Viewport> getViewports() {
-		return viewports;
+	public ViewportStack getViewportStack() {
+		return viewportStack;
 	}
 }
