@@ -1,7 +1,7 @@
 package net.fossar.core.block;
 
-import net.fossar.core.grid.DataGrid;
 
+import net.fossar.model.DataGrid;
 import net.fossar.model.core.block.AbstractBlock;
 import net.fossar.model.core.block.Block;
 import net.fossar.model.core.block.Lever;

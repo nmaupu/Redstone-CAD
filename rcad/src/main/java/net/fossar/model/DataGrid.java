@@ -1,16 +1,24 @@
 package net.fossar.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import net.fossar.model.core.block.Air;
-import net.fossar.model.core.block.DataBlock;
+import net.fossar.model.core.AdjacentBlocks;
+import net.fossar.model.core.block.*;
+import net.fossar.model.core.clock.Clock;
 
 public class DataGrid implements Model {
 	private int rows;
 	private int cols;
 	private int layers;
 	private DataBlock blocks[][][];
+
+    private ArrayList<DataBlock> activeBlocks = new ArrayList<DataBlock>();
+    private ArrayList<DataBlock> inactiveBlocks = new ArrayList<DataBlock>();
+
+
 	
 	public DataGrid(int rows, int cols, int layers) {
 		this.rows   = rows;
@@ -50,7 +58,39 @@ public class DataGrid implements Model {
 		if (l > 0)
 			res.put(Direction.BELOW, getBlock(r, c, l-1));
 		
-		return res.size() == 0 ? null : res;
+		return res;
+	}
+
+    public void add(DataBlock datablock) {
+
+        blocks[datablock.getRow()][datablock.getCol()][datablock.getLay()] = datablock;
+        AbstractBlock block = datablock.getBlock();
+        if (block instanceof ActiveBlock) {
+            activeBlocks.add(datablock);
+        } else if (block instanceof Block) {
+            inactiveBlocks.add(datablock);
+        }
+    }
+
+    public void doUpdate() {
+        AdjacentBlocks adjacentBlocks = new AdjacentBlocks(this);
+        for (DataBlock block : activeBlocks) {
+            block.getBlock().doUpdate(adjacentBlocks.getAdjacents(block));
+        }
+
+        for (DataBlock block : inactiveBlocks) {
+            block.getBlock().doUpdate(adjacentBlocks.getAdjacents(block));
+        }
+
+    }
+
+    public void tick(){
+        Clock.next();
+		Clock.next();
+    }
+
+    public void addBlock(AbstractBlock block, int row, int col, int layer) {
+        add(new DataBlock(row, col, layer, block));
 	}
 
 	public int getRows() {

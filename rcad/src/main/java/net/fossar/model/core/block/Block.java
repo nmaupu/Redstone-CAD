@@ -1,7 +1,6 @@
 package net.fossar.model.core.block;
 
-import net.fossar.core.AdjacentBlocks;
-import net.fossar.core.block.PassiveBlock;
+import net.fossar.model.core.AdjacentBlocks;
 import net.fossar.model.Direction;
 
 import java.util.Map;
@@ -15,12 +14,12 @@ public class Block extends AbstractBlock implements PassiveBlock {
 	@Override
 	public void doUpdate(AdjacentBlocks adjacentBlocks) {
 		int result = 0;
-		for (Map.Entry<Direction, AbstractBlock> entry : adjacentBlocks.entrySet()) {
-			AbstractBlock block = entry.getValue();
+		for (Map.Entry<Direction, DataBlock> entry : adjacentBlocks.entrySet()) {
+			AbstractBlock block = entry.getValue().getBlock();
 			int output = 0;
 			if (block instanceof Wire) {
 				output = block.getOutput();
-				block.doUpdate(adjacentBlocks.getAdjacents(block));
+				block.doUpdate(adjacentBlocks.getAdjacents(entry.getValue()));
 			}
 			if (block instanceof Torch) {
 				output = block.isPowered() ? AbstractBlock.POWER_OFF : AbstractBlock.POWER_MAX;

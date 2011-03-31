@@ -1,9 +1,7 @@
 package net.fossar.model.core.block;
 
-import net.fossar.core.AdjacentBlocks;
+import net.fossar.model.core.AdjacentBlocks;
 import net.fossar.model.Direction;
-import net.fossar.model.core.block.AbstractBlock;
-import net.fossar.model.core.block.BlockPowerListener;
 
 public class Air extends AbstractBlock {
 	public static final Air INSTANCE = new Air();

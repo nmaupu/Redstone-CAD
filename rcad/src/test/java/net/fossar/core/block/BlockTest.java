@@ -1,17 +1,15 @@
 package net.fossar.core.block;
 
 import junit.framework.TestCase;
-import net.fossar.core.AdjacentBlocks;
+import net.fossar.model.DataGrid;
+import net.fossar.model.core.AdjacentBlocks;
 
 
-import net.fossar.core.grid.DataGrid;
+
 
 import net.fossar.model.Direction;
-import net.fossar.model.core.block.Torch;
-import net.fossar.model.core.block.Wire;
+import net.fossar.model.core.block.*;
 import org.mockito.Mockito;
-import net.fossar.model.core.block.AbstractBlock;
-import net.fossar.model.core.block.Block;
 import net.fossar.model.core.clock.Clock;
 
 /**
@@ -44,9 +42,9 @@ public class BlockTest extends TestCase {
 		Block block2 = Mockito.mock(Block.class);
 		Torch torch = Mockito.mock(Torch.class);
 
-		adjacentBlocks.put(Direction.LEFT, wire);
-		adjacentBlocks.put(Direction.RIGHT, block2);
-		adjacentBlocks.put(Direction.ABOVE, torch);
+		adjacentBlocks.put(Direction.LEFT, new DataBlock(0,0,0,wire));
+		adjacentBlocks.put(Direction.RIGHT, new DataBlock(0,0,0, block2));
+		adjacentBlocks.put(Direction.ABOVE, new DataBlock(0,0,0, torch));
 
 		block.setInput(AbstractBlock.POWER_MAX);
 		assertEquals(0, block.getOutput());

@@ -1,4 +1,4 @@
-package net.fossar.core.block;
+package net.fossar.model.core.block;
 
 /**
  * Created by IntelliJ IDEA.

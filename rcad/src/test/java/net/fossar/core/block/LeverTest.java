@@ -1,10 +1,10 @@
 package net.fossar.core.block;
 
+import net.fossar.model.DataGrid;
 import net.fossar.model.Direction;
+import net.fossar.model.core.AdjacentBlocks;
 import net.fossar.model.core.block.*;
 import junit.framework.TestCase;
-import net.fossar.core.AdjacentBlocks;
-import net.fossar.core.grid.DataGrid;
 
 import org.mockito.Mockito;
 
@@ -27,20 +27,26 @@ public class LeverTest extends TestCase {
 	public void testUpdate() throws Exception {
 		Lever lever = new Lever();
 
-		AdjacentBlocks adjacentBlocks = new AdjacentBlocks(new DataGrid(0, 0, 0));
+        DataGrid grid = new DataGrid(3, 3, 2);
+
+        AdjacentBlocks adjacentBlocks = new AdjacentBlocks(grid);
 		Wire wire = Mockito.mock(Wire.class);
 		Block block = Mockito.mock(Block.class);
 		Torch torch = Mockito.mock(Torch.class);
 
-		adjacentBlocks.put(Direction.LEFT, wire);
-		adjacentBlocks.put(Direction.RIGHT, block);
-		adjacentBlocks.put(Direction.ABOVE, torch);
+		grid.addBlock(wire, 0,1,0);
+        grid.addBlock(block,1,0,0);
+        grid.addBlock(lever,1,1,0);
+
+        grid.addBlock(torch,1,2,1);
+
 
 		lever.powerOn();
-		lever.doUpdate(adjacentBlocks);
+		lever.doUpdate(adjacentBlocks.getAdjacents(grid.getBlock(1,1,0)));
 
 		Mockito.verify(wire).setInput(16);
 		Mockito.verify(block).setInput(16);
 		Mockito.verifyZeroInteractions(torch);
 	}
+    
 }
