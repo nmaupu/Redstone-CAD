@@ -1,16 +1,24 @@
 package net.fossar.model;
 
 import java.util.ArrayList;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import net.fossar.model.core.AdjacentBlocks;
-import net.fossar.model.core.block.*;
+import net.fossar.model.core.block.AbstractBlock;
+import net.fossar.model.core.block.ActiveBlock;
+import net.fossar.model.core.block.Air;
+import net.fossar.model.core.block.Block;
+import net.fossar.model.core.block.BlockType;
+import net.fossar.model.core.block.DataBlock;
 import net.fossar.model.core.clock.Clock;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DataGrid implements IDataGrid {
+	private Logger logger = LoggerFactory.getLogger(DataGrid.class);
 	private int rows;
 	private int cols;
 	private int layers;
@@ -105,27 +113,27 @@ public class DataGrid implements IDataGrid {
         inactiveBlocks.remove(dataBlock);
 
         dataBlock.setBlock(block);
-        if (block instanceof ActiveBlock) {
+        updateDataBlockLists(dataBlock);
+	}
+    
+    public void add(DataBlock dataBlock) {
+        dataBlocks[dataBlock.getRow()][dataBlock.getCol()][dataBlock.getLay()] = dataBlock;
+        updateDataBlockLists(dataBlock);
+    }
+    
+    private void updateDataBlockLists(DataBlock dataBlock) {
+    	AbstractBlock block = dataBlock.getBlock();
+    	if (block instanceof ActiveBlock) {
             activeBlocks.add(dataBlock);
         } else if (block instanceof Block) {
             inactiveBlocks.add(dataBlock);
-        }
-
-	}
-    
-    public void add(DataBlock datablock) {
-
-        dataBlocks[datablock.getRow()][datablock.getCol()][datablock.getLay()] = datablock;
-        AbstractBlock block = datablock.getBlock();
-        if (block instanceof ActiveBlock) {
-            activeBlocks.add(datablock);
-        } else if (block instanceof Block) {
-            inactiveBlocks.add(datablock);
         }
     }
 
     @Override
     public void doUpdate() {
+    	logger.debug("doUpdate");
+    	
         for (DataBlock block : activeBlocks) {
             block.getBlock().doUpdate(new AdjacentBlocks(this, block));
         }

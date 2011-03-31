@@ -4,11 +4,15 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.event.MouseInputAdapter;
 
+import net.fossar.model.Direction;
 import net.fossar.model.IDataGrid;
 import net.fossar.model.core.block.AbstractBlock;
+import net.fossar.model.core.block.DataBlock;
+import net.fossar.model.core.block.PassiveBlock;
 import net.fossar.view.Viewport;
 import net.fossar.view.ViewportLabel;
 
@@ -54,14 +58,29 @@ public class ViewportLabelMouseInputController extends MouseInputAdapter impleme
 			ViewportLabel label = viewports.get(currentLayer).getViewportLabel(r, c);
 			AbstractBlock newBlock = Director.toolBarActionController.createInstanceOfCurrentSelectedBlock();
 			
-			
 			dg.setBlock(newBlock,r, c, currentLayer);
-			// Normaly, never change when already set ...
+			Map<Direction,DataBlock> adj = dg.getAdjacentStatesDirection(dg.getDataBlock(r, c, currentLayer));
+			// Normally, never change when already set ...
 			label.setDataBlock(dg.getDataBlock(r, c, currentLayer));
-			label.setAdjacentBlocks(dg.getAdjacentStatesDirection(dg.getDataBlock(r, c, currentLayer)));
+			label.setAdjacentBlocks(adj);
+			
+			// Reset all passive blocks
+			/*resetPassiveBlocks(adj);
+			Director.dataGridController.getDataGrid().tick();
+			Director.dataGridController.getDataGrid().doUpdate();
+			*/
 			
 			// Repaint to display properly
 			repaintLabelAndAdjacents(label);
+		}
+	}
+	
+	private void resetPassiveBlocks(Map<Direction, DataBlock> blocks) {
+		for(Map.Entry<Direction, DataBlock> entry : blocks.entrySet()) {
+			AbstractBlock b = entry.getValue().getBlock();
+			if(b instanceof PassiveBlock) {
+				((PassiveBlock)b).resetBlockPower();
+			}
 		}
 	}
 	

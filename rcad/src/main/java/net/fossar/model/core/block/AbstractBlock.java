@@ -82,6 +82,10 @@ public abstract class AbstractBlock implements Model {
 
 		listeners.add(listener);
 	}
+	
+	protected void setPower(int power) {
+		this.power = power;
+	}
 
     @Override
     public String toString() {

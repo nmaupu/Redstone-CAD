@@ -39,4 +39,9 @@ public class Wire extends AbstractBlock implements PassiveBlock {
 		}
 	}
 
+	@Override
+	public void resetBlockPower() {
+		super.setPower(POWER_OFF);
+	}
+
 }
