@@ -1,35 +1,36 @@
 package net.fossar.model;
 
 import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.fossar.model.core.AdjacentBlocks;
 import net.fossar.model.core.block.*;
 import net.fossar.model.core.clock.Clock;
 
-public class DataGrid implements Model {
+public class DataGrid implements IDataGrid {
 	private int rows;
 	private int cols;
 	private int layers;
-	private DataBlock blocks[][][];
-
+	private DataBlock dataBlocks[][][];	
+    
     private ArrayList<DataBlock> activeBlocks = new ArrayList<DataBlock>();
     private ArrayList<DataBlock> inactiveBlocks = new ArrayList<DataBlock>();
 
-
-	
+    
 	public DataGrid(int rows, int cols, int layers) {
 		this.rows   = rows;
 		this.cols   = cols;
 		this.layers = layers;
 		
 		// All blocks is default to Air
-		blocks = new DataBlock[rows][cols][layers];
+		dataBlocks = new DataBlock[rows][cols][layers];
 		for(int i=0; i<rows; i++)
 			for(int j=0; j<cols; j++)
 				for(int k=0; k<layers; k++)
-					blocks[i][j][k] = new DataBlock(i, j, k, Air.INSTANCE);
+					dataBlocks[i][j][k] = new DataBlock(i, j, k, Air.INSTANCE);
 	}
 	
 	/**
@@ -37,6 +38,7 @@ public class DataGrid implements Model {
 	 * @param block
 	 * @return A map indicating adjacent blocks
 	 */
+	@Override
 	public Map<Direction, DataBlock> getAdjacentStatesDirection(DataBlock block) {
 		int r = block.getRow();
 		int c = block.getCol();
@@ -45,24 +47,75 @@ public class DataGrid implements Model {
 		Map<Direction, DataBlock> res = new HashMap<Direction, DataBlock>();
 		
 		if (r < getRows()-1)
-			res.put(Direction.DOWN, getBlock(r+1, c, l));
+			res.put(Direction.DOWN, getDataBlock(r + 1, c, l));
 		if (r > 0)
-			res.put(Direction.UP, getBlock(r-1, c, l));
+			res.put(Direction.UP, getDataBlock(r - 1, c, l));
 		if (c < getCols()-1)
-			res.put(Direction.RIGHT, getBlock(r, c+1, l));
+			res.put(Direction.RIGHT, getDataBlock(r, c + 1, l));
 		if (c > 0)
-			res.put(Direction.LEFT, getBlock(r, c-1, l));
+			res.put(Direction.LEFT, getDataBlock(r, c - 1, l));
 		if (l < getLayers()-1)
-			res.put(Direction.ABOVE, getBlock(r, c, l+1));
+			res.put(Direction.ABOVE, getDataBlock(r, c, l + 1));
 		if (l > 0)
-			res.put(Direction.BELOW, getBlock(r, c, l-1));
+			res.put(Direction.BELOW, getDataBlock(r, c, l - 1));
+		
+		return res;
+	}
+	
+	@Override
+	public Map<Direction, BlockType> getAdjacentTypeDirection(DataBlock block) {
+		Map<Direction, DataBlock> list = getAdjacentStatesDirection(block);
+		Map<Direction, BlockType> res = new HashMap<Direction, BlockType>();
+		
+		for(Entry<Direction, DataBlock> entry : list.entrySet()) {
+			res.put(entry.getKey(), BlockType.getBlockType(entry.getValue().getBlock()));
+		}
 		
 		return res;
 	}
 
+	@Override
+	public int getRows() {
+		return rows;
+	}
+
+	@Override
+	public int getCols() {
+		return cols;
+	}
+
+	@Override
+	public int getLayers() {
+		return layers;
+	}
+
+	public DataBlock[][][] getDataBlocks() {
+		return dataBlocks;
+	}
+	
+	@Override
+	public DataBlock getDataBlock(int r, int c, int l) {
+		return dataBlocks[r][c][l];
+	}
+
+	@Override
+	public void setBlock(AbstractBlock block, int r, int c, int l) {
+        DataBlock dataBlock = getDataBlock(r, c, l);
+        activeBlocks.remove(dataBlock);
+        inactiveBlocks.remove(dataBlock);
+
+        dataBlock.setBlock(block);
+        if (block instanceof ActiveBlock) {
+            activeBlocks.add(dataBlock);
+        } else if (block instanceof Block) {
+            inactiveBlocks.add(dataBlock);
+        }
+
+	}
+    
     public void add(DataBlock datablock) {
 
-        blocks[datablock.getRow()][datablock.getCol()][datablock.getLay()] = datablock;
+        dataBlocks[datablock.getRow()][datablock.getCol()][datablock.getLay()] = datablock;
         AbstractBlock block = datablock.getBlock();
         if (block instanceof ActiveBlock) {
             activeBlocks.add(datablock);
@@ -71,6 +124,7 @@ public class DataGrid implements Model {
         }
     }
 
+    @Override
     public void doUpdate() {
         for (DataBlock block : activeBlocks) {
             block.getBlock().doUpdate(new AdjacentBlocks(this, block));
@@ -82,6 +136,7 @@ public class DataGrid implements Model {
 
     }
 
+    @Override
     public void tick(){
         Clock.next();
 		Clock.next();
@@ -89,25 +144,5 @@ public class DataGrid implements Model {
 
     public void addBlock(AbstractBlock block, int row, int col, int layer) {
         add(new DataBlock(row, col, layer, block));
-	}
-
-	public int getRows() {
-		return rows;
-	}
-
-	public int getCols() {
-		return cols;
-	}
-
-	public int getLayers() {
-		return layers;
-	}
-
-	public DataBlock[][][] getBlocks() {
-		return blocks;
-	}
-	
-	public DataBlock getBlock(int r, int c, int l) {
-		return blocks[r][c][l];
 	}
 }

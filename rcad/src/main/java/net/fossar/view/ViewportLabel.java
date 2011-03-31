@@ -13,15 +13,9 @@ import java.util.Map.Entry;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
-import net.fossar.model.DataGrid;
 import net.fossar.model.Direction;
-import net.fossar.model.core.block.AbstractBlock;
-import net.fossar.model.core.block.Block;
+import net.fossar.model.core.block.BlockType;
 import net.fossar.model.core.block.DataBlock;
-import net.fossar.model.core.block.Torch;
-import net.fossar.model.core.block.Wire;
-import net.fossar.presenter.Director;
-import net.fossar.presenter.Presenter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,23 +29,23 @@ import org.slf4j.LoggerFactory;
 public class ViewportLabel extends JLabel implements View {
 	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(ViewportLabel.class);
-	public static final int   LABEL_WIDTH      = 25;
-	public static final int   BORDER_WIDTH     = 1;
 	
-	private Presenter presenter;
+	public static final int LABEL_WIDTH  = 25;
+	public static final int BORDER_WIDTH = 1;
+	
+	private IViewport parent;
 	private DataBlock dataBlock;
-	private DataGrid dataGrid;
-	
-	public ViewportLabel(Presenter presenter, DataBlock dataBlock) {
+	private Map<Direction, DataBlock> currentAdjacentBlocks;
+
+	public ViewportLabel(IViewport parent, DataBlock dataBlock) {
 		super();
 		
-		this.presenter = presenter;
-		dataGrid = (DataGrid) presenter.getModel(Director.DATAGRID);
+		this.parent = parent;
 		this.dataBlock = dataBlock;
 		
 		this.setPreferredSize(new Dimension(LABEL_WIDTH, LABEL_WIDTH));
 		this.setBounds(0, 0, LABEL_WIDTH, LABEL_WIDTH);
-				
+		
 		this.setOpaque(true);
 
 		int top = BORDER_WIDTH;
@@ -61,20 +55,13 @@ public class ViewportLabel extends JLabel implements View {
 		
 		if (dataBlock.getRow() == 0) top  *= 2;
 		if (dataBlock.getCol() == 0) left *= 2;
-		if (dataBlock.getRow() == dataGrid.getRows() - 1) bottom *= 2;
-		if (dataBlock.getCol() == dataGrid.getCols() - 1) right  *= 2;
+		if (dataBlock.getRow() == parent.getRows() - 1) bottom *= 2;
+		if (dataBlock.getCol() == parent.getCols() - 1) right  *= 2;
 		
 		this.setBorder(BorderFactory.createMatteBorder(top, left, bottom, right, Colors.COLOR_VIEWPORT_BORDERS));
+		this.setBackground(Colors.COLOR_AIR);
 	}
-	
-	public DataBlock getDataBlock() {
-		return dataBlock;
-	}
-	
-	public void setDataBlock(DataBlock dataBlock) {
-		this.dataBlock = dataBlock;
-	}
-	
+
 	@Override
 	public void paintComponent(Graphics g1) {
 		super.paintComponent(g1);
@@ -83,49 +70,45 @@ public class ViewportLabel extends JLabel implements View {
 		// anti aliasing
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		setBackground(getBackgroundColor());
-
-		// width == height
-		int width = getWidth();
-		Map<Direction,DataBlock> dirs = null;
-		AbstractBlock b = dataBlock.getBlock();
-		
-		if(b instanceof Torch) {
-			// Drawing a torch
-			dirs = dataGrid.getAdjacentStatesDirection(dataBlock);
-			
-			// Use first Block found to place torch
-			Direction d = Direction.UNDEF;
-			for(Entry<Direction, DataBlock> entry : dirs.entrySet()) {
-				if(entry.getValue().getBlock() instanceof Block)
-					d = entry.getKey();
-			}
-			
-			drawTorch(g, d, width);
-			
-		} else if(b instanceof Wire) {
-			// Wires connect to torches and wires
-			dirs = dataGrid.getAdjacentStatesDirection(dataBlock);
-			
-			// Filter for Torch or Wire
-			List<Direction> list = new ArrayList<Direction>();
-			for(Entry<Direction, DataBlock> entry : dirs.entrySet()) {
-				AbstractBlock tmpBlk = entry.getValue().getBlock();
-				
-				if(tmpBlk instanceof Torch || tmpBlk instanceof Wire)
-					list.add(entry.getKey());
-			}
-			
-			// Draw Wire
-			drawWire(g, list, width);
-		}
+		renderViewportLabel(g);
 	}
 	
-	public Color getBackgroundColor() {
-		if(dataBlock.getBlock() instanceof Block)
-			return Colors.COLOR_BLOCK;
+	public void renderViewportLabel(Graphics2D g) {
+		Map<Direction,DataBlock> dirs = currentAdjacentBlocks;
 		
-		return Colors.COLOR_AIR;
+		switch (BlockType.getBlockType(dataBlock.getBlock())) {
+		case AIR:
+			drawAir(g);
+			break;
+		case BLOCK:
+			drawBlock(g);
+			break;
+		case WIRE:
+			List<Direction> ds = new ArrayList<Direction>();
+			
+			for(Entry<Direction, DataBlock> entry : dirs.entrySet()) {
+				if(BlockType.getBlockType(entry.getValue().getBlock()) == BlockType.TORCH || 
+				   BlockType.getBlockType(entry.getValue().getBlock()) == BlockType.WIRE)
+						ds.add(entry.getKey());
+			}
+			
+			drawWire(g, ds);
+			break;
+		case TORCH:
+			Direction d = Direction.UNDEF;
+			for(Entry<Direction, DataBlock> entry : dirs.entrySet()) {
+				if(BlockType.getBlockType(entry.getValue().getBlock()) == BlockType.BLOCK) {
+					d = entry.getKey();
+					break;
+				}
+			}
+			drawTorch(g, d);
+			break;
+		case LEVER:
+			// TODO Draw a lever attach to first available adjacent block
+			//drawLever(g, d);
+			break;
+		}
 	}
 	
 	/**
@@ -134,15 +117,16 @@ public class ViewportLabel extends JLabel implements View {
 	 * @param dir
 	 * @param width
 	 */
-	public void drawTorch(Graphics2D g, Direction dir, int width) {
+	public void drawTorch(Graphics2D g, Direction dir) {
+		int width = getWidth();
 		int rectS = width/7 * 2;
 		int rectB = width/2;
 		int x=0, y=0, w=0, h=0;
 		
 		// Torch pointing opposite direction of given dir
-		Direction currentDir = dataBlock.getBlock().getDirection();
-		Direction newDir = (dir == Direction.UNDEF) ? Direction.ABOVE : currentDir.getOpposite(); 
-		dataBlock.getBlock().setDirection(newDir);
+		//Direction newDir = (dir == Direction.UNDEF) ? Direction.ABOVE : dir.getOpposite();
+		// TODO Do it in model
+		//dataBlock.getBlock().setDirection(newDir);
 		
 		switch(dir) {
 		case UP :
@@ -175,7 +159,8 @@ public class ViewportLabel extends JLabel implements View {
 		g.fillOval(x, y, w, h);
 	}
 	
-	public void drawWire(Graphics2D g, List<Direction> dirs, int width) {
+	public void drawWire(Graphics2D g, List<Direction> dirs) {
+		int width = getWidth();
 		
 		Color c = dataBlock.getBlock().isPowered() ? Colors.COLOR_WIRE_ON : Colors.COLOR_WIRE_OFF;
 		g.setColor(c);
@@ -194,7 +179,7 @@ public class ViewportLabel extends JLabel implements View {
 			ds.add(Direction.DOWN);
 			ds.add(Direction.LEFT);
 			ds.add(Direction.RIGHT);
-			drawWire(g, ds, width);
+			drawWire(g, ds);
 		}
 		
 		for (Direction d : ds) {
@@ -229,5 +214,39 @@ public class ViewportLabel extends JLabel implements View {
 			
 			g.fillRect(x, y, w, h);
 		}
+	}
+
+	public void drawBlock(Graphics2D g) {
+		this.setBackground(Colors.COLOR_BLOCK);
+	}
+
+	public void drawAir(Graphics2D g) {
+		this.setBackground(Colors.COLOR_AIR);
+	}
+
+	public void drawLever(Graphics2D g) {
+		
+	}
+
+	public void drawButton(Graphics2D g) {
+		
+	}
+	
+	public void setAdjacentBlocks(Map<Direction, DataBlock> currentAdjacentBlocks) {
+		this.currentAdjacentBlocks = currentAdjacentBlocks;
+	}
+	
+	public void setDataBlock(DataBlock dataBlock) {
+		this.dataBlock = dataBlock;
+	}
+	
+	public int getRow() {
+		return dataBlock.getRow();
+	}
+	public int getCol() {
+		return dataBlock.getCol();
+	}
+	public int getLay() {
+		return dataBlock.getLay();
 	}
 }
