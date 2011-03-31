@@ -1,4 +1,4 @@
-package net.fossar.core;
+package net.fossar.view;
 
 import java.awt.Color;
 

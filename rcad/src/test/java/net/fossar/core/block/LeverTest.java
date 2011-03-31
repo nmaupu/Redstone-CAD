@@ -1,8 +1,9 @@
 package net.fossar.core.block;
 
+import net.fossar.model.Direction;
+import net.fossar.model.core.block.*;
 import junit.framework.TestCase;
 import net.fossar.core.AdjacentBlocks;
-import net.fossar.core.Direction;
 import net.fossar.core.grid.DataGrid;
 
 import org.mockito.Mockito;

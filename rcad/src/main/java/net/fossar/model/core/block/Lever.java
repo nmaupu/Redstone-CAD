@@ -1,9 +1,12 @@
-package net.fossar.core.block;
+package net.fossar.model.core.block;
+
+import net.fossar.core.block.ActiveBlock;
+import net.fossar.core.block.PassiveBlock;
+import net.fossar.model.Direction;
 
 import java.util.Map;
 
 import net.fossar.core.AdjacentBlocks;
-import net.fossar.core.Direction;
 
 public class Lever extends AbstractBlock implements ActiveBlock {
 

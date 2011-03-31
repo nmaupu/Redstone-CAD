@@ -1,17 +1,18 @@
-package net.fossar.core.block;
+package net.fossar.model.core.block;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.fossar.core.AdjacentBlocks;
-import net.fossar.core.Direction;
-import net.fossar.core.clock.Time;
+import net.fossar.model.Direction;
+import net.fossar.model.Model;
+import net.fossar.model.core.clock.Time;
 
-public abstract class AbstractBlock {
-	public static final int PROPAGATION_DELAY = 20;
-	public static final int POWER_OFF = 0;
-	public static final int POWER_MAX = 15;
-	public static final int POWER_SOURCE = POWER_MAX + 1;
+public abstract class AbstractBlock implements Model {
+    public static final int PROPAGATION_DELAY = 20;
+    public static final int POWER_OFF = 0;
+    public static final int POWER_MAX = 15;
+    public static final int POWER_SOURCE = POWER_MAX + 1;
 
 	private int row;
 	private int col;

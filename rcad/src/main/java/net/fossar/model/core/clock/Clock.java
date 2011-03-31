@@ -1,9 +1,9 @@
-package net.fossar.core.clock;
+package net.fossar.model.core.clock;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Clock {
+public abstract class Clock {
     private static final int PERIOD = 10;
     private static volatile long time = 0;
     private static final Lock lock = new ReentrantLock();

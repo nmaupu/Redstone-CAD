@@ -1,4 +1,4 @@
-package net.fossar.core;
+package net.fossar.model;
 
 public enum Direction {
 	ABOVE(),

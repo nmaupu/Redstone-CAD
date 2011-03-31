@@ -3,8 +3,9 @@ package net.fossar.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.fossar.core.block.AbstractBlock;
 import net.fossar.core.grid.DataGrid;
+import net.fossar.model.Direction;
+import net.fossar.model.core.block.AbstractBlock;
 
 /**
  */
@@ -16,10 +17,7 @@ public class AdjacentBlocks extends HashMap<Direction, AbstractBlock> {
 	}
 
 	public AdjacentBlocks getAdjacents(AbstractBlock block) {
-		Map<Direction, AbstractBlock> adjacentStatesDirection = datagrid.getAdjacentStatesDirection(block);
-		AdjacentBlocks result = new AdjacentBlocks(datagrid);
-		result.putAll(adjacentStatesDirection);
-
-		return result;
+		return datagrid.getAdjacentStatesDirection(block);
+		
 	}
 }

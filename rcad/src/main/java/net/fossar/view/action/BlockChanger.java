@@ -1,12 +1,15 @@
-package net.fossar.ui.action;
+package net.fossar.view.action;
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 
-import net.fossar.core.Block;
-import net.fossar.core.BlockType;
+import net.fossar.model.core.block.AbstractBlock;
+import net.fossar.model.core.block.Air;
+import net.fossar.model.core.block.Block;
+import net.fossar.model.core.block.Torch;
+import net.fossar.model.core.block.Wire;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,12 +17,13 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings("serial")
 public class BlockChanger extends AbstractAction {
 	private static Logger logger = LoggerFactory.getLogger(BlockChanger.class);
-	private BlockType blockType = BlockType.AIR;
 	
 	public static final String ACTION_BLOCK = "block";
 	public static final String ACTION_AIR   = "air";
 	public static final String ACTION_WIRE  = "wire";
 	public static final String ACTION_TORCH = "torch";
+	
+	private static String currentBlock = ACTION_AIR;
 	
 
 	@Override
@@ -28,21 +32,19 @@ public class BlockChanger extends AbstractAction {
 		if (s instanceof JButton) {
 			JButton b = (JButton)s;
 			String cmd = b.getActionCommand();
-			
-			if (cmd.equals(ACTION_AIR))
-				blockType = BlockType.AIR;
-			else if (cmd.equals(ACTION_BLOCK))
-				blockType = BlockType.BLOCK;
-			else if (cmd.equals(ACTION_WIRE))
-				blockType = BlockType.WIRE;
-			else if (cmd.equals(ACTION_TORCH))
-				blockType = BlockType.TORCH;
-			
+			currentBlock = cmd;
 			logger.debug("ActionPerformed - cmd="+cmd);
 		}
 	}
 	
-	public BlockType getBlockType() {
-		return blockType;
+	public static AbstractBlock getBlock() {
+		if(currentBlock.equals(ACTION_BLOCK))
+			return new Block();
+		if(currentBlock.equals(ACTION_TORCH))
+			return new Torch();
+		if(currentBlock.equals(ACTION_WIRE))
+			return new Wire();
+		
+		return Air.INSTANCE;
 	}
 }

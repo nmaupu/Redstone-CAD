@@ -1,4 +1,4 @@
-package net.fossar.core.clock;
+package net.fossar.model.core.clock;
 
 public class Time {
     private final long creationTime;

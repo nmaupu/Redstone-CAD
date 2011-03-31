@@ -1,4 +1,4 @@
-package net.fossar.ui;
+package net.fossar.view.toolbar;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,14 +6,18 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
+import net.fossar.presenter.Presenter;
+import net.fossar.view.View;
+import net.fossar.view.action.BlockChanger;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.fossar.ui.action.BlockChanger;
-
 @SuppressWarnings("serial")
-public class MainToolBar extends JToolBar implements ActionListener {
+public class MainToolBar extends JToolBar implements ActionListener, View {
 	private Logger logger = LoggerFactory.getLogger(MainToolBar.class);
+	
+	private Presenter presenter;
 	
 	private BlockChanger actionPerformer = new BlockChanger();
 	private JButton blockButton = new JButton(actionPerformer);
@@ -22,8 +26,10 @@ public class MainToolBar extends JToolBar implements ActionListener {
 	private JButton torchButton = new JButton(actionPerformer);
 	private JButton updateButton = new JButton();
 	
-	public MainToolBar() {
+	public MainToolBar(Presenter presenter) {
 		super("Main tool bar");
+		
+		this.presenter = presenter;
 		
 		// Text
 		blockButton.setText("Block");
@@ -60,7 +66,7 @@ public class MainToolBar extends JToolBar implements ActionListener {
 		if(b.getActionCommand().equals("update")) {
 			// update circuitry
 			logger.info("Updating circuitry");
-			UIBuilder.mainFrame.getViewportStack().getDataGrid().updateCircuitrySources();
+			//UIBuilder.mainFrame.getViewportStack().getDataGrid().updateCircuitrySources();
 		}
 			
 	}

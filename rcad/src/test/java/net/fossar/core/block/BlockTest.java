@@ -2,11 +2,17 @@ package net.fossar.core.block;
 
 import junit.framework.TestCase;
 import net.fossar.core.AdjacentBlocks;
-import net.fossar.core.Direction;
-import net.fossar.core.clock.Clock;
+
+
 import net.fossar.core.grid.DataGrid;
 
+import net.fossar.model.Direction;
+import net.fossar.model.core.block.Torch;
+import net.fossar.model.core.block.Wire;
 import org.mockito.Mockito;
+import net.fossar.model.core.block.AbstractBlock;
+import net.fossar.model.core.block.Block;
+import net.fossar.model.core.clock.Clock;
 
 /**
  * Created by IntelliJ IDEA. User: mgrenonville Date: 30/03/11 Time: 15:51 To

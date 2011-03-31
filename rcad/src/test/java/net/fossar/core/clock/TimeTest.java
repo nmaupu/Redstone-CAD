@@ -2,6 +2,9 @@ package net.fossar.core.clock;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import net.fossar.model.core.clock.Clock;
+import net.fossar.model.core.clock.Time;
+
 import org.junit.Ignore;
 
 @Ignore

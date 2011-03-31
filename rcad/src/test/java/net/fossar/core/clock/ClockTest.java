@@ -1,11 +1,12 @@
 package net.fossar.core.clock;
 
-import junit.framework.TestCase;
-import org.junit.Ignore;
-
-import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import junit.framework.TestCase;
+import net.fossar.model.core.clock.Clock;
+
+import org.junit.Ignore;
 
 @Ignore
 public class ClockTest extends TestCase {
