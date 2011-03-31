@@ -28,7 +28,7 @@ public class Lever extends AbstractBlock implements ActiveBlock {
 			AbstractBlock block = entry.getValue().getBlock();
 			if (block instanceof PassiveBlock) {
 				block.setInput(getOutput());
-				block.doUpdate(adjacentBlocks.getAdjacents(entry.getValue()));
+				block.doUpdate(new AdjacentBlocks(adjacentBlocks, entry.getValue()));
 			}
 		}
 

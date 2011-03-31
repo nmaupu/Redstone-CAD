@@ -32,6 +32,7 @@ public abstract class AbstractBlock implements Model {
 	}
 
 	public void setInput(int power) {
+
 		powerToInject = power;
 		power = getOutput();
 	}
@@ -82,5 +83,8 @@ public abstract class AbstractBlock implements Model {
 		listeners.add(listener);
 	}
 
-
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName()+"[" + "power=" + power + ']';
+    }
 }

@@ -45,4 +45,13 @@ public class DataBlock {
 	public void setBlock(AbstractBlock block) {
 		this.block = block;
 	}
+
+    public boolean isAt(int fromRow, int fromCol, int fromLay) {
+        return fromRow == row && fromCol == col && fromLay == lay;
+    }
+
+    @Override
+    public String toString() {
+        return "DataBlock{" + "row=" + row + ", col=" + col + ", lay=" + lay + ", block=" + block + '}';
+    }
 }

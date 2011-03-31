@@ -19,7 +19,7 @@ public class Block extends AbstractBlock implements PassiveBlock {
 			int output = 0;
 			if (block instanceof Wire) {
 				output = block.getOutput();
-				block.doUpdate(adjacentBlocks.getAdjacents(entry.getValue()));
+				block.doUpdate(new AdjacentBlocks(adjacentBlocks, entry.getValue()));
 			}
 			if (block instanceof Torch) {
 				output = block.isPowered() ? AbstractBlock.POWER_OFF : AbstractBlock.POWER_MAX;

@@ -37,7 +37,7 @@ public class BlockTest extends TestCase {
 	public void testUpdate() throws Exception {
 		Block block = new Block();
 
-		AdjacentBlocks adjacentBlocks = new AdjacentBlocks(new DataGrid(0, 0, 0));
+		AdjacentBlocks adjacentBlocks = new AdjacentBlocks(Mockito.mock(DataGrid.class), null);
 		Wire wire = Mockito.mock(Wire.class);
 		Block block2 = Mockito.mock(Block.class);
 		Torch torch = Mockito.mock(Torch.class);

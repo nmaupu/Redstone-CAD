@@ -2,7 +2,6 @@ package net.fossar.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import net.fossar.model.core.AdjacentBlocks;
@@ -73,13 +72,12 @@ public class DataGrid implements Model {
     }
 
     public void doUpdate() {
-        AdjacentBlocks adjacentBlocks = new AdjacentBlocks(this);
         for (DataBlock block : activeBlocks) {
-            block.getBlock().doUpdate(adjacentBlocks.getAdjacents(block));
+            block.getBlock().doUpdate(new AdjacentBlocks(this, block));
         }
 
         for (DataBlock block : inactiveBlocks) {
-            block.getBlock().doUpdate(adjacentBlocks.getAdjacents(block));
+            block.getBlock().doUpdate(new AdjacentBlocks(this, block));
         }
 
     }
