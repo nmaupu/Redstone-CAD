@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.fossar.model.Model;
-import net.fossar.view.View;
 
 /**
  * Class used to represent a Presenter in the MVP design pattern
@@ -14,31 +13,12 @@ import net.fossar.view.View;
  *
  */
 public abstract class Presenter {
-	private Map<String,View> views = null;
 	private Map<String,Model> models = null;
 	
 	/**
 	 * Presenter initialization
 	 */
 	public abstract void doInit();
-	
-	public void addView(String k, View v) {
-		if(views == null)
-			views = new HashMap<String,View>();
-		
-		views.put(k, v);
-	}
-	
-	public void removeView(String k) {
-		if(views == null)
-			return;
-		
-		views.remove(k);
-	}
-	
-	public View getView(String k) {
-		return views.get(k);
-	}
 	
 	public void addModel(String k, Model m) {
 		if(models == null)

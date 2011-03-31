@@ -4,50 +4,59 @@ import java.awt.GridLayout;
 
 import javax.swing.JPanel;
 
-import net.fossar.model.DataGrid;
+import net.fossar.model.Direction;
 import net.fossar.presenter.Director;
-import net.fossar.presenter.Presenter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("serial")
-public class Viewport extends JPanel implements View {
+public class Viewport extends JPanel implements IViewport {
 	@SuppressWarnings("unused")
 	private Logger logger = LoggerFactory.getLogger(Viewport.class);
 	
-	private Presenter presenter;
-	private DataGrid grid;
 	private ViewportLabel[][] labels = null;
-	private int layerIdx = 0;
+	private int rows;
+	private int cols;
+	private final int layerIdx;
 	
-	public Viewport(Presenter presenter, int layerIdx) {
-		this.presenter = presenter;
-		this.grid = (DataGrid) presenter.getModel(Director.DATAGRID);
+	public Viewport(int rows, int cols, int layerIdx) {
 		this.layerIdx = layerIdx;
+		this.rows = rows;
+		this.cols = cols;
 		
-		super.setLayout(new GridLayout(grid.getRows(), grid.getCols()));
+		super.setLayout(new GridLayout(rows, cols));
 		initLabels();
 	}
 	
 	private void initLabels() {
 		if (labels == null)
-			labels = new ViewportLabel[grid.getRows()][grid.getCols()];
+			labels = new ViewportLabel[rows][cols];
 		
-		for(int i=0; i<grid.getRows(); i++) {
-			for(int j=0; j<grid.getCols(); j++) {
-				ViewportLabel vl = new ViewportLabel(presenter, grid.getBlock(i, j, layerIdx)); 
-				labels[i][j] = vl;
+		for(int i=0; i<rows; i++) {
+			for(int j=0; j<cols; j++) {
+				labels[i][j] = new ViewportLabel(this, Director.dataGridController.getDataGrid().getDataBlock(i,j,layerIdx));
 				super.add(labels[i][j]);
 			}
 		}
 	}
 	
-	public int getLayerId() {
-		return layerIdx;
-	}
-	
 	public ViewportLabel getViewportLabel(int r, int c) {
 		return labels[r][c];
 	}
+	
+	@Override
+	public int getLayerIdx() {
+		return layerIdx;
+	}
+
+	@Override
+	public int getRows() {
+		return rows;
+	}
+
+	@Override
+	public int getCols() {
+		return cols;
+	}	
 }
