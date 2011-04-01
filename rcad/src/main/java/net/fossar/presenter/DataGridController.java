@@ -1,7 +1,7 @@
 package net.fossar.presenter;
 
-import net.fossar.model.DataGrid;
-import net.fossar.model.IDataGrid;
+import net.fossar.model.core.DataGrid;
+import net.fossar.model.core.IDataGrid;
 
 public class DataGridController implements Controller {
 	private static int DEFAULT_GRID_ROWS=20;

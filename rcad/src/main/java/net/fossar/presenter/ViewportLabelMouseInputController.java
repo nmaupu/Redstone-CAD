@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.swing.event.MouseInputAdapter;
 
 import net.fossar.model.Direction;
-import net.fossar.model.IDataGrid;
+import net.fossar.model.core.IDataGrid;
 import net.fossar.model.core.block.AbstractBlock;
 import net.fossar.model.core.block.DataBlock;
 import net.fossar.model.core.block.PassiveBlock;
@@ -74,15 +74,7 @@ public class ViewportLabelMouseInputController extends MouseInputAdapter impleme
 			repaintLabelAndAdjacents(label);
 		}
 	}
-	
-	private void resetPassiveBlocks(Map<Direction, DataBlock> blocks) {
-		for(Map.Entry<Direction, DataBlock> entry : blocks.entrySet()) {
-			AbstractBlock b = entry.getValue().getBlock();
-			if(b instanceof PassiveBlock) {
-				((PassiveBlock)b).resetBlockPower();
-			}
-		}
-	}
+
 	
 	
 	private void repaintLabelAndAdjacents(ViewportLabel label) {

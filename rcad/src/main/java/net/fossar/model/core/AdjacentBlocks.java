@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.fossar.model.DataGrid;
 import net.fossar.model.Direction;
 import net.fossar.model.core.block.AbstractBlock;
 import net.fossar.model.core.block.Block;
