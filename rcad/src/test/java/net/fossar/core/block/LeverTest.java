@@ -1,7 +1,7 @@
 package net.fossar.core.block;
 
-import net.fossar.model.DataGrid;
 import net.fossar.model.core.AdjacentBlocks;
+import net.fossar.model.core.DataGrid;
 import net.fossar.model.core.block.*;
 import junit.framework.TestCase;
 
