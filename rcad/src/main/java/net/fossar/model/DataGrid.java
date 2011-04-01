@@ -6,12 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.fossar.model.core.AdjacentBlocks;
-import net.fossar.model.core.block.AbstractBlock;
-import net.fossar.model.core.block.ActiveBlock;
-import net.fossar.model.core.block.Air;
-import net.fossar.model.core.block.Block;
-import net.fossar.model.core.block.BlockType;
-import net.fossar.model.core.block.DataBlock;
+import net.fossar.model.core.block.*;
 import net.fossar.model.core.clock.Clock;
 
 import org.slf4j.Logger;
@@ -25,6 +20,7 @@ public class DataGrid implements IDataGrid {
 	private DataBlock dataBlocks[][][];	
     
     private ArrayList<DataBlock> activeBlocks = new ArrayList<DataBlock>();
+    private ArrayList<DataBlock> wires = new ArrayList<DataBlock>();
     private ArrayList<DataBlock> inactiveBlocks = new ArrayList<DataBlock>();
 
     
@@ -111,9 +107,11 @@ public class DataGrid implements IDataGrid {
         DataBlock dataBlock = getDataBlock(r, c, l);
         activeBlocks.remove(dataBlock);
         inactiveBlocks.remove(dataBlock);
+        wires.remove(dataBlock);
 
         dataBlock.setBlock(block);
         updateDataBlockLists(dataBlock);
+
 	}
     
     public void add(DataBlock dataBlock) {
@@ -127,6 +125,8 @@ public class DataGrid implements IDataGrid {
             activeBlocks.add(dataBlock);
         } else if (block instanceof Block) {
             inactiveBlocks.add(dataBlock);
+        }else if(block instanceof Wire) {
+            wires.add(dataBlock);
         }
     }
 
@@ -134,6 +134,9 @@ public class DataGrid implements IDataGrid {
     public void doUpdate() {
     	logger.debug("doUpdate");
     	
+        for (DataBlock wire : wires) {
+            wire.getBlock().setInput(AbstractBlock.POWER_OFF);
+        }
         for (DataBlock block : activeBlocks) {
             block.getBlock().doUpdate(new AdjacentBlocks(this, block));
         }
