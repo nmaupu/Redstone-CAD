@@ -1,7 +1,6 @@
 package net.fossar.model.core.block;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import net.fossar.model.core.AdjacentBlocks;
 import net.fossar.model.Direction;
@@ -17,7 +16,8 @@ public abstract class AbstractBlock implements Model {
 
 
 	protected int power = 0;
-	Direction direction = Direction.UNDEF;
+	protected Set<Direction> direction;
+
 	protected List<BlockPowerListener> listeners = null;
 
 	private int powerToInject = 0;
@@ -29,9 +29,14 @@ public abstract class AbstractBlock implements Model {
 	public AbstractBlock(int power, int delay) {
 		this.power = power;
 		this.delay = delay;
+        initDirections();
 	}
 
-	public void setInput(int power) {
+    protected void initDirections() {
+         direction = EnumSet.noneOf(Direction.class);
+    }
+
+    public void setInput(int power) {
 
 		powerToInject = power;
 		power = getOutput();
@@ -50,13 +55,14 @@ public abstract class AbstractBlock implements Model {
 		return power;
 	}
 
-	public Direction getDirection() {
-		return direction;
-	}
+    public Set<Direction> getDirections(){
+        return Collections.unmodifiableSet(direction);
+    }
 
-	public void setDirection(Direction direction) {
-		this.direction = direction;
-	}
+	protected void addDirection(Direction direction){
+        this.direction.add(direction);
+    }
+
 
 	public boolean isPowered() {
 		return power > 0;

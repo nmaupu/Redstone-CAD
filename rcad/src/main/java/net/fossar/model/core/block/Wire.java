@@ -22,6 +22,7 @@ public class Wire extends AbstractBlock implements PassiveBlock {
 
 	@Override
 	public void doUpdate(AdjacentBlocks adjacentBlocks) {
+
 		for (Map.Entry<Direction, DataBlock> entry : adjacentBlocks.entrySet()) {
             DataBlock value = entry.getValue();
             AbstractBlock block = value.getBlock();
@@ -39,7 +40,22 @@ public class Wire extends AbstractBlock implements PassiveBlock {
 		}
 	}
 
-	public void resetBlockPower() {
+    public void updateDirection(AdjacentBlocks dirs) {
+        initDirections();
+        for(Map.Entry<Direction, DataBlock> entry : dirs.entrySet()) {
+            AbstractBlock block = entry.getValue().getBlock();
+            if(block instanceof Torch || block instanceof Wire)
+                addDirection(entry.getKey());
+        }
+        if(direction.isEmpty()){
+            direction.add(Direction.LEFT);
+            direction.add(Direction.RIGHT);
+            direction.add(Direction.UP);
+            direction.add(Direction.DOWN);
+        }
+    }
+
+    public void resetBlockPower() {
 		super.setPower(POWER_OFF);
 	}
 }

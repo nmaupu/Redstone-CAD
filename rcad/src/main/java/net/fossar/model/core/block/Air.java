@@ -15,10 +15,8 @@ public class Air extends AbstractBlock {
 		return;
 	}
 
-	@Override
-	public Direction getDirection() {
-		return Direction.UNDEF;
-	}
+
+	
 
 	@Override
 	public int getOutput() {
@@ -35,10 +33,7 @@ public class Air extends AbstractBlock {
 		return true;
 	}
 
-	@Override
-	public void setDirection(Direction direction) {
-		return;
-	}
+	
 
 	@Override
 	public void setInput(int power) {
