@@ -46,7 +46,8 @@ public class LeverTest extends TestCase {
 
         Mockito.verify(wire).setInput(16);
         Mockito.verify(block).setInput(16);
-        Mockito.verifyZeroInteractions(torch);
+        Mockito.verify(torch).updateDirection(Mockito.<AdjacentBlocks>any());
+        Mockito.verifyNoMoreInteractions(torch);
     }
 
 }

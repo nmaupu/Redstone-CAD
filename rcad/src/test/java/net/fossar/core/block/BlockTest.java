@@ -12,6 +12,8 @@ import net.fossar.model.core.block.*;
 import org.mockito.Mockito;
 import net.fossar.model.core.clock.Clock;
 
+import java.util.EnumSet;
+
 /**
  * Created by IntelliJ IDEA. User: mgrenonville Date: 30/03/11 Time: 15:51 To
  * change this template use File | Settings | File Templates.
@@ -39,6 +41,8 @@ public class BlockTest extends TestCase {
 
 		AdjacentBlocks adjacentBlocks = new AdjacentBlocks(Mockito.mock(DataGrid.class), null);
 		Wire wire = Mockito.mock(Wire.class);
+        Mockito.when(wire.getDirections()).thenReturn(EnumSet.of(Direction.LEFT));
+        
 		Block block2 = Mockito.mock(Block.class);
 		Torch torch = Mockito.mock(Torch.class);
 
