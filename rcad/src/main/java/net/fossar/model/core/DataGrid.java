@@ -1,11 +1,11 @@
-package net.fossar.model;
+package net.fossar.model.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.fossar.model.core.AdjacentBlocks;
+import net.fossar.model.Direction;
 import net.fossar.model.core.block.*;
 import net.fossar.model.core.clock.Clock;
 

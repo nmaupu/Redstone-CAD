@@ -33,8 +33,4 @@ public class Block extends AbstractBlock implements PassiveBlock {
 		}
 		setInput(result);
 	}
-
-	public void resetBlockPower() {
-		super.setPower(POWER_OFF);
-	}
 }

@@ -1,7 +1,9 @@
-package net.fossar.model;
+package net.fossar.model.core;
 
 import java.util.Map;
 
+import net.fossar.model.Direction;
+import net.fossar.model.Model;
 import net.fossar.model.core.block.AbstractBlock;
 import net.fossar.model.core.block.BlockType;
 import net.fossar.model.core.block.DataBlock;
