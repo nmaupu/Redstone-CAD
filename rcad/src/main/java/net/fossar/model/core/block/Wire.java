@@ -20,6 +20,7 @@ package net.fossar.model.core.block;
 
 import net.fossar.model.Direction;
 
+import java.util.EnumSet;
 import java.util.Map;
 
 import net.fossar.model.core.AdjacentBlocks;
@@ -29,44 +30,59 @@ import org.slf4j.LoggerFactory;
 public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
     protected static Logger logger = LoggerFactory.getLogger(Wire.class);
 
-	public Wire() {
-		super(POWER_OFF, 0);
-	}
+    public Wire() {
+        super(POWER_OFF, 0);
+    }
 
-	@Override
-	public int getOutput() {
-		return super.getOutput() == 0 ? 0 : super.getOutput() - 1;
-	}
+    @Override
+    public int getOutput() {
+        return super.getOutput() == 0 ? 0 : super.getOutput() - 1;
+    }
 
-	@Override
-	public void doUpdate(AdjacentBlocks adjacentBlocks) {
+    @Override
+    public void doUpdate(AdjacentBlocks adjacentBlocks) {
 
-		for (Map.Entry<Direction, DataBlock> entry : adjacentBlocks.entrySet()) {
+        for (Map.Entry<Direction, DataBlock> entry : adjacentBlocks.entrySet()) {
             DataBlock value = entry.getValue();
             AbstractBlock block = value.getBlock();
             if (block instanceof Wire) {
                 logger.debug("dealing with " + value);
                 AdjacentBlocks adjacents = new AdjacentBlocks(adjacentBlocks, value, true);
 
-                if(!adjacents.getAlreadyProcessed().contains(value) || ((block.getOutput() <= getOutput() -1) && getOutput() != 0)) {
-                    logger.debug("i'm  " + getOutput() + " going to "+ block.getOutput());
+                if (!adjacents.getAlreadyProcessed().contains(
+                        value) || ((block.getOutput() <= getOutput() - 1) && getOutput() != 0)) {
+                    logger.debug("i'm  " + getOutput() + " going to " + block.getOutput());
                     block.setInput(getOutput());
                     block.doUpdate(adjacents);
                     logger.debug("destination : " + value + " is now " + block.getOutput());
                 }
-			}
-		}
-	}
+            }
+            if (entry.getKey() == Direction.ABOVE) {
+                if (BlockType.getBlockType(block) == BlockType.AIR) {
+                    for (Direction cardinal : EnumSet.of(Direction.UP, Direction.DOWN, Direction.LEFT,
+                            Direction.RIGHT)) {
+//                        if (adjacentBlocks.get(cardinal) == BLOCK) {
+//                            if (ABOVE_cardinal == wire) {
+//                                abstractBlock.setInput(getOutput());
+//                                abstractBlock.doUpdate();
+//                            }
+//                        }
+                    }
+                }
+            }
+        }
+    }
 
     @Override
     public void updateDirection(AdjacentBlocks dirs) {
         initDirections();
-        for(Map.Entry<Direction, DataBlock> entry : dirs.entrySet()) {
+        for (Map.Entry<Direction, DataBlock> entry : dirs.entrySet()) {
             AbstractBlock block = entry.getValue().getBlock();
-            if(block instanceof Torch || block instanceof Wire)
+            if (block instanceof Torch || block instanceof Wire) {
                 addDirection(entry.getKey());
+            }
         }
-        if(direction.isEmpty()){
+        if (direction.isEmpty()) {
             direction.add(Direction.LEFT);
             direction.add(Direction.RIGHT);
             direction.add(Direction.UP);
@@ -75,6 +91,6 @@ public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
     }
 
     public void resetBlockPower() {
-		super.setPower(POWER_OFF);
-	}
+        super.setPower(POWER_OFF);
+    }
 }
