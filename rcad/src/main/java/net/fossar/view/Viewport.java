@@ -5,13 +5,14 @@ import java.awt.GridLayout;
 import javax.swing.JPanel;
 
 import net.fossar.model.Direction;
+import net.fossar.model.core.block.DataBlock;
 import net.fossar.presenter.Director;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("serial")
-public class Viewport extends JPanel implements IViewport {
+public class Viewport extends JPanel implements IViewport, IDataGridDisplayer {
 	@SuppressWarnings("unused")
 	private Logger logger = LoggerFactory.getLogger(Viewport.class);
 	
@@ -58,5 +59,14 @@ public class Viewport extends JPanel implements IViewport {
 	@Override
 	public int getCols() {
 		return cols;
+	}
+
+	@Override
+	public void drawBlock(DataBlock dataBlock) {
+		logger.debug("Repainting label "+this);
+		// Draw block in specified location (given by dataBlock)
+		ViewportLabel label = this.getViewportLabel(dataBlock.getRow(), dataBlock.getCol());
+		label.setDataBlock(dataBlock);
+		label.repaint();
 	}	
 }

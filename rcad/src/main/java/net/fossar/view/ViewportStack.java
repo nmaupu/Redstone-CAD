@@ -17,7 +17,7 @@ import net.fossar.presenter.event.GridViewEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ViewportStack extends JPanel implements IDataGridDisplayer, MouseInputListener {
+public class ViewportStack extends JPanel implements MouseInputListener {
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = LoggerFactory.getLogger(ViewportStack.class);
@@ -134,13 +134,5 @@ public class ViewportStack extends JPanel implements IDataGridDisplayer, MouseIn
 		int c = (int)(x / labelW);
 		
 		return c;
-	}
-
-	@Override
-	public void drawBlock(final DataBlock dataBlock) {
-		// Draw block in specified location (given by dataBlock)
-		ViewportLabel label = viewports.get(dataBlock.getLay()).getViewportLabel(dataBlock.getRow(), dataBlock.getCol());
-		label.setDataBlock(dataBlock);
-		label.repaint();
 	}
 }

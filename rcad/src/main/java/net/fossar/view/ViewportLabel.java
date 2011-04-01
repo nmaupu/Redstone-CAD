@@ -74,6 +74,9 @@ public class ViewportLabel extends JLabel implements IView {
 	}
 	
 	public void renderViewportLabel(Graphics2D g) {
+		if(dataBlock == null)
+			return;
+		
 		switch (BlockType.getBlockType(dataBlock.getBlock())) {
 		case AIR:
 			drawAir(g);
