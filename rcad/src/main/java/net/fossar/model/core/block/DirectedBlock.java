@@ -28,4 +28,6 @@ import net.fossar.model.core.AdjacentBlocks;
  * To change this template use File | Settings | File Templates.
  */
 public interface DirectedBlock {
+
+    void updateDirection(AdjacentBlocks dirs);
 }

@@ -26,7 +26,7 @@ import net.fossar.model.core.AdjacentBlocks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Wire extends AbstractBlock implements PassiveBlock {
+public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
     protected static Logger logger = LoggerFactory.getLogger(Wire.class);
 
 	public Wire() {
@@ -58,6 +58,7 @@ public class Wire extends AbstractBlock implements PassiveBlock {
 		}
 	}
 
+    @Override
     public void updateDirection(AdjacentBlocks dirs) {
         initDirections();
         for(Map.Entry<Direction, DataBlock> entry : dirs.entrySet()) {

@@ -111,7 +111,7 @@ public class ViewportLabel extends JLabel implements IView {
 						ds.add(entry.getKey());
 			}
 			*/
-			drawWire(g, new ArrayList<Direction>());
+			drawWire(g, new ArrayList<Direction>(dataBlock.getBlock().getDirections()));
 			break;
 		case TORCH:
 			/*
@@ -123,7 +123,7 @@ public class ViewportLabel extends JLabel implements IView {
 				}
 			}*/
 			
-			drawTorch(g, Direction.UNDEF);
+			drawTorch(g, dataBlock.getBlock().getDirections().iterator().next());
 			break;
 		case LEVER:
 			// TODO Draw a lever attach to first available adjacent block

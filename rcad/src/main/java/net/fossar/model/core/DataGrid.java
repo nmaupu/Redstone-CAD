@@ -150,6 +150,13 @@ public class DataGrid implements IDataGrid {
         for(DataBlock wire: wires){
             ((Wire) wire.getBlock()).updateDirection(new AdjacentBlocks(this, wire));
         }
+        for(DataBlock activeBlock: activeBlocks){
+            AbstractBlock possibleTorch = activeBlock.getBlock();
+            if(possibleTorch instanceof Torch) {
+                ((Torch) possibleTorch).updateDirection(new AdjacentBlocks(this, activeBlock));
+            }
+        }
+
     }
 
     @Override

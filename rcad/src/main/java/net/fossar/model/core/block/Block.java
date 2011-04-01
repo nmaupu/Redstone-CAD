@@ -33,17 +33,16 @@ public class Block extends AbstractBlock implements PassiveBlock {
 	public void doUpdate(AdjacentBlocks adjacentBlocks) {
 		int result = 0;
 		for (Map.Entry<Direction, DataBlock> entry : adjacentBlocks.entrySet()) {
-			AbstractBlock block = entry.getValue().getBlock();
+			AbstractBlock abstractBlock = entry.getValue().getBlock();
 			int output = 0;
-			if (block instanceof Wire) {
-				output = block.getOutput();
-				block.doUpdate(new AdjacentBlocks(adjacentBlocks, entry.getValue()));
+			if (abstractBlock instanceof Wire) {
+                if(abstractBlock.getDirections().contains(entry.getKey()) || abstractBlock.getDirections().contains(entry.getKey().getOpposite()) ){
+				    output = abstractBlock.getOutput();
+				    abstractBlock.doUpdate(new AdjacentBlocks(adjacentBlocks, entry.getValue()));
+                }
 			}
-//			if (block instanceof Torch) {
-//				output = block.isPowered() ? AbstractBlock.POWER_OFF : AbstractBlock.POWER_MAX;
-//			}
-			if (block instanceof Lever) {
-				output = block.isPowered() ? AbstractBlock.POWER_MAX : AbstractBlock.POWER_OFF;
+			if (abstractBlock instanceof Lever) {
+				output = abstractBlock.isPowered() ? AbstractBlock.POWER_MAX : AbstractBlock.POWER_OFF;
 			}
 			if (result < output) {
 				result = output;
