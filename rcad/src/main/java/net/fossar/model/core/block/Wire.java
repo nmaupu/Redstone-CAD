@@ -20,8 +20,10 @@ package net.fossar.model.core.block;
 
 import net.fossar.model.Direction;
 
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Map;
+import java.util.Set;
 
 import net.fossar.model.core.AdjacentBlocks;
 import org.slf4j.Logger;
@@ -29,6 +31,9 @@ import org.slf4j.LoggerFactory;
 
 public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
     protected static Logger logger = LoggerFactory.getLogger(Wire.class);
+    
+    protected static Set<Direction> horizontalPropagation = Collections.synchronizedSet(
+            EnumSet.of(Direction.UP, Direction.LEFT, Direction.RIGHT, Direction.DOWN));
 
     public Wire() {
         super(POWER_OFF, 0);
@@ -41,15 +46,17 @@ public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
 
     @Override
     public void doUpdate(AdjacentBlocks adjacentBlocks) {
-
         for (Map.Entry<Direction, DataBlock> entry : adjacentBlocks.entrySet()) {
             DataBlock value = entry.getValue();
+            Direction direction = entry.getKey();
             AbstractBlock block = value.getBlock();
-            if (block instanceof Wire) {
+
+
+            if (block instanceof Wire && horizontalPropagation.contains(direction)) {
                 logger.debug("dealing with " + value);
                 updateAdjacentWire(adjacentBlocks, value);
             }
-            followUpperWire(adjacentBlocks, entry.getKey(), value);
+            followUpperWire(adjacentBlocks, direction, value);
         }
     }
 
