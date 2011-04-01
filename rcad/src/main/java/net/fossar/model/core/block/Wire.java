@@ -47,29 +47,50 @@ public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
             AbstractBlock block = value.getBlock();
             if (block instanceof Wire) {
                 logger.debug("dealing with " + value);
-                AdjacentBlocks adjacents = new AdjacentBlocks(adjacentBlocks, value, true);
+                updateAdjacentWire(adjacentBlocks, value);
+            }
+            followUpperWire(adjacentBlocks, entry.getKey(), value);
+        }
+    }
 
-                if (!adjacents.getAlreadyProcessed().contains(
-                        value) || ((block.getOutput() <= getOutput() - 1) && getOutput() != 0)) {
-                    logger.debug("i'm  " + getOutput() + " going to " + block.getOutput());
-                    block.setInput(getOutput());
-                    block.doUpdate(adjacents);
-                    logger.debug("destination : " + value + " is now " + block.getOutput());
-                }
+    /**
+     * Follows upper wires.
+     * A upper wire can only be followed when the block above the wire is an Air block
+     *
+     * @param adjacentBlocks
+     * @param direction
+     * @param value
+     */
+    private void followUpperWire(AdjacentBlocks adjacentBlocks, Direction direction, DataBlock value) {
+
+        AbstractBlock block = value.getBlock();
+        if (!(direction == Direction.ABOVE && BlockType.getBlockType(block) == BlockType.AIR)) {
+            //There cannot be upper wire in this case.
+            return;
+        }
+        
+        Map<Direction, DataBlock> upperBlocks = adjacentBlocks.getUpperBlocks();
+        // Iterate over the 4 possible abstractBlocks (UP, DOWN, LEFT, RIGHT) above the current wire.
+        for (Map.Entry<Direction, DataBlock> upperBlock : upperBlocks.entrySet()) {
+            if (upperBlock.getValue().getBlock() instanceof Wire && adjacentBlocks.get(
+                    upperBlock.getKey()).getBlock() instanceof Block) {
+                //this is the case where wire is over a block and connected to current wire.
+                updateAdjacentWire(adjacentBlocks, upperBlock.getValue());
             }
-            if (entry.getKey() == Direction.ABOVE) {
-                if (BlockType.getBlockType(block) == BlockType.AIR) {
-                    for (Direction cardinal : EnumSet.of(Direction.UP, Direction.DOWN, Direction.LEFT,
-                            Direction.RIGHT)) {
-//                        if (adjacentBlocks.get(cardinal) == BLOCK) {
-//                            if (ABOVE_cardinal == wire) {
-//                                abstractBlock.setInput(getOutput());
-//                                abstractBlock.doUpdate();
-//                            }
-//                        }
-                    }
-                }
-            }
+        }
+
+
+    }
+
+    private void updateAdjacentWire(AdjacentBlocks adjacentBlocks, DataBlock value) {
+        AdjacentBlocks adjacents = new AdjacentBlocks(adjacentBlocks, value, true);
+        AbstractBlock block = value.getBlock();
+        if (!adjacents.getAlreadyProcessed().contains(
+                value) || ((block.getOutput() <= getOutput() - 1) && getOutput() != 0)) {
+            logger.debug("i'm  " + getOutput() + " going to " + block.getOutput());
+            block.setInput(getOutput());
+            block.doUpdate(adjacents);
+            logger.debug("destination : " + value + " is now " + block.getOutput());
         }
     }
 

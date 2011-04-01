@@ -78,4 +78,8 @@ public class AdjacentBlocks extends HashMap<Direction, DataBlock> {
 
         return adjacentBlocks;
     }
+
+    public Map<Direction, DataBlock> getUpperBlocks(){
+        return datagrid.getAdjacentBlockDirection(centralBlock,  1);
+    }
 }
