@@ -17,11 +17,12 @@
 
 package net.fossar.view;
 
+import java.io.Serializable;
+
 /**
  * Interface used to represent a view in the MVP design pattern
  * @author nmaupu
  *
  */
-public interface IView {
-
+public interface IView extends Serializable {
 }

@@ -15,8 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.fossar.view;
+package net.fossar.presenter.event;
 
-public interface IMainFrame extends IView {
-	public void setVisible(boolean b);
+import java.util.ArrayList;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: nmaupu
+ * Date: 01/04/11
+ * Time: 23:48
+ * To change this template use File | Settings | File Templates.
+ */
+public class GridViewEventManager extends PresenterEventManager {
+
 }

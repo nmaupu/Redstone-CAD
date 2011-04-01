@@ -15,8 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.fossar.view;
+package net.fossar.view.scenery.grid2d;
 
-public interface IMainFrame extends IView {
-	public void setVisible(boolean b);
+import net.fossar.view.IView;
+
+public interface ITopViewport extends IView {
+	public int getRows();
+	public int getCols();
+	public int getLayerIdx();
 }

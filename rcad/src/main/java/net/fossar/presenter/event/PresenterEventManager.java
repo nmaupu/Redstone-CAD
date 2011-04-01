@@ -17,5 +17,30 @@
 
 package net.fossar.presenter.event;
 
-public interface GridViewEventListener extends IPresenterListener {
+import java.util.ArrayList;
+import java.util.EventListener;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: nmaupu
+ * Date: 01/04/11
+ * Time: 23:55
+ * To change this template use File | Settings | File Templates.
+ */
+public abstract class PresenterEventManager {
+    private ArrayList<IPresenterListener> presenterListeners = new ArrayList<IPresenterListener>();
+
+    public void addGridViewEventListener(IPresenterListener listener) {
+        presenterListeners.add(listener);
+    }
+
+    public void removeGridViewEventListener(IPresenterListener listener) {
+        presenterListeners.remove(listener);
+    }
+
+    public void notifyPresenterListeners(PresenterEvent e) {
+        for(IPresenterListener l : presenterListeners) {
+            l.presenterEventFired(e);
+        }
+    }
 }

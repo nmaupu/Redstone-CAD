@@ -21,6 +21,7 @@ import net.fossar.model.core.IDataGrid;
 import net.fossar.model.core.block.AbstractBlock;
 import net.fossar.presenter.event.GridViewEvent;
 import net.fossar.presenter.event.GridViewEventListener;
+import net.fossar.presenter.event.PresenterEvent;
 import net.fossar.view.IDataGridDisplayer;
 
 import org.slf4j.Logger;
@@ -34,16 +35,18 @@ public class GridViewEventController implements IController, GridViewEventListen
 	private Logger logger = LoggerFactory.getLogger(GridViewEvent.class);
 
 	@Override
-	public void gridViewEventFired(GridViewEvent e) {
+	public void presenterEventFired(PresenterEvent e) {
 		/*
-		 * Receiving an event from a grid view
+		 * Receiving an event from a grid2d view
 		 * Updating model with current selected block
 		 */
 		logger.debug("Receiving event - src=" + e.getSource());
-		
-		int r = e.getRow();
-		int c = e.getCol();
-		int l = e.getLay();
+
+        GridViewEvent event = (GridViewEvent)e;
+
+		int r = event.getRow();
+		int c = event.getCol();
+		int l = event.getLay();
 		IDataGrid dg = Director.dataGridController.getDataGrid();
 		
 		if (r >= 0 && r <= dg.getRows()-1 && c >= 0 && c <= dg.getCols()-1) {
@@ -52,7 +55,7 @@ public class GridViewEventController implements IController, GridViewEventListen
 		}
 		
 		// Fire event to redraw this label and its adjacent blocks
-		IDataGridDisplayer displayer = (IDataGridDisplayer)e.getSource();
+		IDataGridDisplayer displayer = (IDataGridDisplayer)event.getSource();
 		
 		displayer.drawBlock(dg.getDataBlock(r, c, l));
 		if (r>0)

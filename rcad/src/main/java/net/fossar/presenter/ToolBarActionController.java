@@ -59,7 +59,7 @@ public class ToolBarActionController extends AbstractAction {
 			else if(cmd.equals(ACTION_UPDATE)) {
                 Director.dataGridController.getDataGrid().doUpdate();
                 Director.dataGridController.getDataGrid().tick();
-                Director.viewportStack.repaint();
+                Director.topViewportStack.repaint();
             }
 			logger.debug("ActionPerformed - cmd="+cmd);
 		}

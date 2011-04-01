@@ -15,10 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.fossar.view;
+package net.fossar.view.scenery.grid2d;
 
-public interface IViewport extends IView {
-	public int getRows();
-	public int getCols();
-	public int getLayerIdx();
+import net.fossar.view.IView;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: nmaupu
+ * Date: 02/04/11
+ * Time: 00:12
+ * To change this template use File | Settings | File Templates.
+ */
+public interface ITopViewportStack extends IView {
 }
