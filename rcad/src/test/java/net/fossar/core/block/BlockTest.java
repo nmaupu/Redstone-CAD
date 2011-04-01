@@ -52,7 +52,7 @@ public class BlockTest extends TestCase {
 
 		Mockito.verify(wire).getOutput();
 		Mockito.verifyZeroInteractions(block2);
-		Mockito.verify(torch).isPowered();
+		Mockito.verifyZeroInteractions(torch);
 
 	}
 

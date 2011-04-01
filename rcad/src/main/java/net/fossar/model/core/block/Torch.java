@@ -34,12 +34,17 @@ public class Torch extends AbstractBlock implements ActiveBlock {
 				} else {
 					this.powerOn();
 				}
-			} else if (block instanceof Wire){
+			}
+		}
+        for (Map.Entry<Direction, DataBlock> entry : adjacentBlocks.entrySet()) {
+            DataBlock dataBlock = entry.getValue();
+            AbstractBlock block = dataBlock.getBlock();
+			if (block instanceof Wire){
                 block.setInput(getOutput());
                 block.doUpdate(new AdjacentBlocks(adjacentBlocks, dataBlock));
             }
-
 		}
+
 
 	}
 }

@@ -1,11 +1,15 @@
 package net.fossar.core.block;
 
+import net.fossar.model.Direction;
+import net.fossar.model.core.AdjacentBlocks;
 import net.fossar.model.core.DataGrid;
 import net.fossar.model.core.block.AbstractBlock;
 import net.fossar.model.core.block.Lever;
 import net.fossar.model.core.block.Torch;
 import net.fossar.model.core.block.Wire;
 import junit.framework.TestCase;
+
+import java.util.Set;
 
 
 public class WireTest extends TestCase {
@@ -17,12 +21,99 @@ public class WireTest extends TestCase {
 
     }
 
+    private <T> void assertContains(Set<T> directions, T direction) {
+        System.out.println(directions);
+        assertTrue("contains" + direction, directions.contains(direction) );
+    }
+
+
     public void test_set_input_with_propagation() {
         Wire wire = new Wire();
         assertEquals(0, wire.getOutput());
         wire.setInput(AbstractBlock.POWER_MAX);
         assertEquals(AbstractBlock.POWER_MAX - 1, wire.getOutput());
     }
+
+
+    public void test_set_direction_cross() {
+
+        DataGrid grid = new DataGrid(1, 1, 1);
+        Wire wire = new Wire();
+        grid.setBlock(wire, 0, 0, 0);
+
+        Set<Direction> directions = wire.getDirections();
+        assertEquals(4, directions.size());
+        
+        assertContains(directions, Direction.UP);
+        assertContains(directions, Direction.DOWN);
+        assertContains(directions, Direction.RIGHT);
+        assertContains(directions, Direction.LEFT);
+    }
+
+    public void test_set_direction_up() {
+
+        DataGrid grid = new DataGrid(2, 1, 1);
+        Wire wire = new Wire();
+        Wire wire2 = new Wire();
+        grid.setBlock(wire, 0, 0, 0);
+        grid.setBlock(wire2, 1, 0, 0);
+
+        Set<Direction> directions = wire.getDirections();
+        
+        assertEquals(1, directions.size());
+        assertContains(directions, Direction.DOWN);
+
+        directions = wire2.getDirections();
+        assertEquals(1, directions.size());
+        assertContains(directions, Direction.UP);
+    }
+
+    public void test_set_direction_right() {
+
+        DataGrid grid = new DataGrid(1, 2, 1);
+        Wire wire = new Wire();
+        Wire wire2 = new Wire();
+        grid.setBlock(wire, 0, 1, 0);
+        grid.setBlock(wire2, 0, 0, 0);
+
+        Set<Direction> directions = wire.getDirections();
+
+        assertEquals(1, directions.size());
+        assertContains(directions, Direction.LEFT);
+
+        directions = wire2.getDirections();
+        assertEquals(1, directions.size());
+        assertContains(directions, Direction.RIGHT);
+    }
+
+
+    public void test_set_direction_corner() {
+
+        DataGrid grid = new DataGrid(2, 2, 1);
+        Wire wire = new Wire();
+        Wire wire2 = new Wire();
+        Wire wire3 = new Wire();
+        grid.setBlock(wire, 0, 1, 0);
+        grid.setBlock(wire2, 0, 0, 0);
+        grid.setBlock(wire3, 1, 0, 0);
+
+        Set<Direction> directions = wire2.getDirections();
+
+        assertEquals(2, directions.size());
+        assertContains(directions, Direction.RIGHT);
+        assertContains(directions, Direction.DOWN);
+
+        directions = wire3.getDirections();
+        assertEquals(1, directions.size());
+        assertContains(directions, Direction.UP);
+
+        directions = wire.getDirections();
+        assertEquals(1, directions.size());
+        assertContains(directions, Direction.LEFT);
+    }
+
+
+
 
     public void test_long_wire() {
         DataGrid grid = new DataGrid(16, 1, 1);
@@ -59,7 +150,6 @@ public class WireTest extends TestCase {
         grid.addBlock(new Wire(), 3, 1, 0);
         grid.addBlock(new Wire(), 3, 2, 0);
         grid.addBlock(new Wire(), 3, 3, 0);
-
 
 
         Wire end = new Wire();

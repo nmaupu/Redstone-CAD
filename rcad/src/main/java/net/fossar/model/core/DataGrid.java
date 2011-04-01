@@ -112,6 +112,7 @@ public class DataGrid implements IDataGrid {
         dataBlock.setBlock(block);
         updateDataBlockLists(dataBlock);
 
+
 	}
     
     public void add(DataBlock dataBlock) {
@@ -127,6 +128,9 @@ public class DataGrid implements IDataGrid {
             inactiveBlocks.add(dataBlock);
         }else if(block instanceof Wire) {
             wires.add(dataBlock);
+        }
+        for(DataBlock wire: wires){
+            ((Wire) wire.getBlock()).updateDirection(new AdjacentBlocks(this, wire));
         }
     }
 
