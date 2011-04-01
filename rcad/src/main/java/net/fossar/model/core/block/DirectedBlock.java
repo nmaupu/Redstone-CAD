@@ -16,13 +16,16 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.fossar.model;
+package net.fossar.model.core.block;
+
+import net.fossar.model.core.AdjacentBlocks;
 
 /**
- * Interface used to represent a model in the MVP design pattern
- * @author nmaupu
- *
+ * Created by IntelliJ IDEA.
+ * User: mgrenonville
+ * Date: 01/04/11
+ * Time: 12:49
+ * To change this template use File | Settings | File Templates.
  */
-public interface Model {
-
+public interface DirectedBlock {
 }
