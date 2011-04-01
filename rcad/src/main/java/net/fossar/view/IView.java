@@ -5,6 +5,6 @@ package net.fossar.view;
  * @author nmaupu
  *
  */
-public interface View {
+public interface IView {
 
 }

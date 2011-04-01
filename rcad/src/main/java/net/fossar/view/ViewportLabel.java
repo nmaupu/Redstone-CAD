@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 @SuppressWarnings("serial")
-public class ViewportLabel extends JLabel implements View {
+public class ViewportLabel extends JLabel implements IView {
 	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(ViewportLabel.class);
 	
@@ -35,13 +35,13 @@ public class ViewportLabel extends JLabel implements View {
 	
 	private IViewport parent;
 	private DataBlock dataBlock;
-	private Map<Direction, DataBlock> currentAdjacentBlocks;
+	//private Map<Direction, DataBlock> currentAdjacentBlocks;
 
 	public ViewportLabel(IViewport parent, DataBlock dataBlock) {
 		super();
 		
 		this.parent = parent;
-		this.dataBlock = dataBlock;
+		//this.dataBlock = dataBlock;
 		
 		this.setPreferredSize(new Dimension(LABEL_WIDTH, LABEL_WIDTH));
 		this.setBounds(0, 0, LABEL_WIDTH, LABEL_WIDTH);
@@ -74,8 +74,6 @@ public class ViewportLabel extends JLabel implements View {
 	}
 	
 	public void renderViewportLabel(Graphics2D g) {
-		Map<Direction,DataBlock> dirs = currentAdjacentBlocks;
-		
 		switch (BlockType.getBlockType(dataBlock.getBlock())) {
 		case AIR:
 			drawAir(g);
@@ -84,25 +82,27 @@ public class ViewportLabel extends JLabel implements View {
 			drawBlock(g);
 			break;
 		case WIRE:
-			List<Direction> ds = new ArrayList<Direction>();
+			/*List<Direction> ds = new ArrayList<Direction>();
 			
 			for(Entry<Direction, DataBlock> entry : dirs.entrySet()) {
 				if(BlockType.getBlockType(entry.getValue().getBlock()) == BlockType.TORCH || 
 				   BlockType.getBlockType(entry.getValue().getBlock()) == BlockType.WIRE)
 						ds.add(entry.getKey());
 			}
-			
-			drawWire(g, ds);
+			*/
+			drawWire(g, new ArrayList<Direction>());
 			break;
 		case TORCH:
+			/*
 			Direction d = Direction.UNDEF;
 			for(Entry<Direction, DataBlock> entry : dirs.entrySet()) {
 				if(BlockType.getBlockType(entry.getValue().getBlock()) == BlockType.BLOCK) {
 					d = entry.getKey();
 					break;
 				}
-			}
-			drawTorch(g, d);
+			}*/
+			
+			drawTorch(g, Direction.UNDEF);
 			break;
 		case LEVER:
 			// TODO Draw a lever attach to first available adjacent block
@@ -231,15 +231,17 @@ public class ViewportLabel extends JLabel implements View {
 	public void drawButton(Graphics2D g) {
 		
 	}
-	
+	/*
 	public void setAdjacentBlocks(Map<Direction, DataBlock> currentAdjacentBlocks) {
 		this.currentAdjacentBlocks = currentAdjacentBlocks;
 	}
+	*/
 	
 	public void setDataBlock(DataBlock dataBlock) {
 		this.dataBlock = dataBlock;
 	}
 	
+	/*
 	public int getRow() {
 		return dataBlock.getRow();
 	}
@@ -249,4 +251,5 @@ public class ViewportLabel extends JLabel implements View {
 	public int getLay() {
 		return dataBlock.getLay();
 	}
+	*/
 }

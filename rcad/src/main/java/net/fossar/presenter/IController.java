@@ -1,5 +1,5 @@
 package net.fossar.presenter;
 
-public interface Controller {
+public interface IController {
 
 }

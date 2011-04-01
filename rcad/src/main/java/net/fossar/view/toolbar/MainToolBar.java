@@ -5,13 +5,13 @@ import javax.swing.JButton;
 import javax.swing.JToolBar;
 
 import net.fossar.presenter.ToolBarActionController;
-import net.fossar.view.View;
+import net.fossar.view.IView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("serial")
-public class MainToolBar extends JToolBar implements View {
+public class MainToolBar extends JToolBar implements IView {
 	@SuppressWarnings("unused")
 	private Logger logger = LoggerFactory.getLogger(MainToolBar.class);
 	
