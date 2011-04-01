@@ -87,8 +87,9 @@ public class DataGrid implements IDataGrid {
         int r = block.getRow();
         int c = block.getCol();
         int l = block.getLay();
-        if (l + layerTranslation < getLayers()) {
-            return getSlice(r, c, l + layerTranslation);
+        int lTranslated = l + layerTranslation;
+        if (lTranslated < getLayers() && lTranslated > 0) {
+            return getSlice(r, c, lTranslated);
         }
         return Collections.emptyMap();
 

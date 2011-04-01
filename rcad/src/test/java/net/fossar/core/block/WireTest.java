@@ -3,10 +3,7 @@ package net.fossar.core.block;
 import net.fossar.model.Direction;
 import net.fossar.model.core.AdjacentBlocks;
 import net.fossar.model.core.DataGrid;
-import net.fossar.model.core.block.AbstractBlock;
-import net.fossar.model.core.block.Lever;
-import net.fossar.model.core.block.Torch;
-import net.fossar.model.core.block.Wire;
+import net.fossar.model.core.block.*;
 import junit.framework.TestCase;
 
 import java.util.Set;
@@ -134,7 +131,7 @@ public class WireTest extends TestCase {
     }
 
     public void test_cycle() {
-        DataGrid grid = new DataGrid(16, 16, 1);
+        DataGrid grid = new DataGrid(16, 16, 2);
 
         Lever start = new Lever();
         grid.addBlock(start, 0, 0, 0);
@@ -144,6 +141,10 @@ public class WireTest extends TestCase {
         grid.addBlock(new Wire(), 1, 3, 0);
 
         grid.addBlock(new Wire(), 2, 0, 0);
+        Wire upperWire = new Wire();
+        grid.addBlock(upperWire, 2, 1, 1);
+        grid.addBlock(new Block(), 2, 1, 0);
+        
         grid.addBlock(new Wire(), 2, 3, 0);
 
         grid.addBlock(new Wire(), 3, 0, 0);
@@ -160,6 +161,7 @@ public class WireTest extends TestCase {
 
         grid.doUpdate();
         assertEquals(AbstractBlock.POWER_SOURCE - 4, end.getOutput());
+        assertEquals(13, upperWire.getOutput());
     }
 
 }
