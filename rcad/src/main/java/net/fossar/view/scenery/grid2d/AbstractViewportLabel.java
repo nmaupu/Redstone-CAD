@@ -135,7 +135,7 @@ public abstract class AbstractViewportLabel extends JLabel implements IView {
      * @param g
      */
 	protected void drawBlock(Graphics2D g) {
-        setBackground(Colors.COLOR_AIR);
+        setBackground(Colors.COLOR_BLOCK);
     }
 
     /**

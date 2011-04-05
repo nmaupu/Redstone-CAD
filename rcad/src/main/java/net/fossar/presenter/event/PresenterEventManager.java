@@ -30,11 +30,11 @@ import java.util.EventListener;
 public abstract class PresenterEventManager {
     private ArrayList<IPresenterListener> presenterListeners = new ArrayList<IPresenterListener>();
 
-    public void addGridViewEventListener(IPresenterListener listener) {
+    public void addPresenterListener(IPresenterListener listener) {
         presenterListeners.add(listener);
     }
 
-    public void removeGridViewEventListener(IPresenterListener listener) {
+    public void removePresenterListener(IPresenterListener listener) {
         presenterListeners.remove(listener);
     }
 

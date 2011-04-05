@@ -23,8 +23,10 @@ import net.fossar.view.IView;
  * Created by IntelliJ IDEA.
  * User: nmaupu
  * Date: 02/04/11
- * Time: 00:46
+ * Time: 00:12
  * To change this template use File | Settings | File Templates.
  */
-public interface IViewport extends IView {
+public interface IViewportStack extends IView {
+    public void addViewport(AbstractViewport viewport);
+    public void removeViewport(AbstractViewport viewport);
 }

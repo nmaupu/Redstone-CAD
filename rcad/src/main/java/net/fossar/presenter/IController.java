@@ -17,6 +17,7 @@
 
 package net.fossar.presenter;
 
-public interface IController {
+import net.fossar.presenter.event.PresenterEvent;
 
+public interface IController {
 }

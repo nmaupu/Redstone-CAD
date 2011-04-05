@@ -51,20 +51,21 @@ public class GridViewEventController implements IController, GridViewEventListen
 		
 		if (r >= 0 && r <= dg.getRows()-1 && c >= 0 && c <= dg.getCols()-1) {
 			AbstractBlock newBlock = Director.toolBarActionController.createInstanceOfCurrentSelectedBlock();
+            logger.info("Inserting block type={} at (r,c,l)=({},{},{})", new Object[] {newBlock, r, c, });
 			dg.setBlock(newBlock, r, c, l);
-		}
-		
-		// Fire event to redraw this label and its adjacent blocks
-		IDataGridDisplayer displayer = (IDataGridDisplayer)event.getSource();
-		
-		displayer.drawBlock(dg.getDataBlock(r, c, l));
-		if (r>0)
-			displayer.drawBlock(dg.getDataBlock(r-1, c, l));
-		if (r<dg.getRows() - 1)
-			displayer.drawBlock(dg.getDataBlock(r+1, c, l));
-		if (c>0)
-			displayer.drawBlock(dg.getDataBlock(r, c-1, l));
-		if (c<dg.getCols() - 1)
-			displayer.drawBlock(dg.getDataBlock(r, c+1, l));
+
+            // Fire event to redraw this label and its adjacent blocks
+            IDataGridDisplayer displayer = (IDataGridDisplayer)event.getSource();
+
+            displayer.drawBlock(dg.getDataBlock(r, c, l));
+            if (r>0)
+                displayer.drawBlock(dg.getDataBlock(r-1, c, l));
+            if (r<dg.getRows() - 1)
+                displayer.drawBlock(dg.getDataBlock(r+1, c, l));
+            if (c>0)
+                displayer.drawBlock(dg.getDataBlock(r, c-1, l));
+            if (c<dg.getCols() - 1)
+                displayer.drawBlock(dg.getDataBlock(r, c+1, l));
+        }
 	}
 }

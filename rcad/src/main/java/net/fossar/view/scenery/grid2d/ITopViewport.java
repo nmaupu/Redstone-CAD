@@ -19,7 +19,7 @@ package net.fossar.view.scenery.grid2d;
 
 import net.fossar.view.IView;
 
-public interface ITopViewport extends IView {
+public interface ITopViewport extends IViewport {
 	public int getRows();
 	public int getCols();
 	public int getLayerIdx();

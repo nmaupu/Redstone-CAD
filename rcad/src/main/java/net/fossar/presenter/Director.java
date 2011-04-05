@@ -19,7 +19,8 @@ package net.fossar.presenter;
 
 import net.fossar.view.IMainFrame;
 import net.fossar.view.MainFrame;
-import net.fossar.view.scenery.grid2d.TopViewportStack;
+import net.fossar.view.scenery.grid2d.TopViewport;
+import net.fossar.view.scenery.grid2d.ViewportStack;
 import net.fossar.view.toolbar.MainToolBar;
 
 public abstract class Director {
@@ -27,16 +28,19 @@ public abstract class Director {
 	protected static final GridViewEventController gridViewEventController = new GridViewEventController();
 	protected static final ToolBarActionController toolBarActionController = new ToolBarActionController();
 	protected static final MainToolBar mainToolBar = new MainToolBar(toolBarActionController);
-	protected static final TopViewportStack topViewportStack = new TopViewportStack(
-			dataGridController.getDataGrid().getRows(),
-			dataGridController.getDataGrid().getCols(),
-			dataGridController.getDataGrid().getLayers());
+	protected static final ViewportStack topViewportStack = new ViewportStack();
 	protected static IMainFrame mainFrame = new MainFrame(mainToolBar, topViewportStack);
 	
 	
 	public static void doInit() {
+        /* Top viewports creation */
+        for(int i=0; i<dataGridController.getDataGrid().getLayers(); i++) {
+            topViewportStack.addViewport(new TopViewport(dataGridController.getDataGrid().getRows(),
+                    dataGridController.getDataGrid().getCols(), i));
+        }
+
 		// Subscriptions to views
-		topViewportStack.getGridViewEventManager().addGridViewEventListener(gridViewEventController);
+		topViewportStack.getGridViewEventManager().addPresenterListener(gridViewEventController);
 		
 		// Show up application
 		mainFrame.setVisible(true);

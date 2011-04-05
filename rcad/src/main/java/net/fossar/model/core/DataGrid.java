@@ -27,6 +27,8 @@ import net.fossar.model.Direction;
 import net.fossar.model.core.block.*;
 import net.fossar.model.core.clock.Clock;
 
+import net.fossar.presenter.event.DataGridEvent;
+import net.fossar.presenter.event.DataGridEventManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +40,8 @@ public class DataGrid implements IDataGrid {
 	private int cols;
 	private int layers;
 	private DataBlock dataBlocks[][][];
+
+    private DataGridEventManager dataGridEventManager = new DataGridEventManager();
 
     private ArrayList<DataBlock> activeBlocks = new ArrayList<DataBlock>();
     private ArrayList<DataBlock> wires = new ArrayList<DataBlock>();
@@ -155,7 +159,8 @@ public class DataGrid implements IDataGrid {
         dataBlock.setBlock(block);
         updateDataBlockLists(dataBlock);
 
-
+        // Fire event
+        dataGridEventManager.notifyPresenterListeners(new DataGridEvent(dataBlock));
 	}
 
     public void add(DataBlock dataBlock) {

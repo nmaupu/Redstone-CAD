@@ -15,16 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.fossar.view.scenery.grid2d;
-
-import net.fossar.view.IView;
+package net.fossar.presenter.event;
 
 /**
  * Created by IntelliJ IDEA.
  * User: nmaupu
- * Date: 02/04/11
- * Time: 00:46
+ * Date: 04/04/11
+ * Time: 02:12
  * To change this template use File | Settings | File Templates.
  */
-public interface IViewport extends IView {
+public interface DataGridEventListener extends IPresenterListener {
 }

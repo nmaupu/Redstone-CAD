@@ -17,5 +17,8 @@
 
 package net.fossar.presenter.event;
 
+import net.fossar.model.core.block.DataBlock;
+
 public interface GridViewEventListener extends IPresenterListener {
+
 }

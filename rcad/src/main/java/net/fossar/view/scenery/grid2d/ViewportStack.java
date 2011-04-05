@@ -33,32 +33,21 @@ import net.fossar.presenter.event.GridViewEventManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TopViewportStack extends JPanel implements MouseInputListener, ITopViewportStack {
+public class ViewportStack extends JPanel implements MouseInputListener, IViewportStack {
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger logger = LoggerFactory.getLogger(TopViewportStack.class);
+	private static final Logger logger = LoggerFactory.getLogger(ViewportStack.class);
 		
-	private List<TopViewport> topViewports = null;
+	private List<AbstractViewport> viewports = null;
 	private CardLayout layout = new CardLayout();
 	private int currentLayer = 0;
-	private int rows, cols, layers;
     private GridViewEventManager gridViewEventManager = new GridViewEventManager();
 	
-	public TopViewportStack(int rows, int cols, int layers) {
+	public ViewportStack() {
 		super();
 		super.setLayout(layout);
-		this.rows = rows;
-		this.cols = cols;
-		this.layers = layers;
 		
-		topViewports = new ArrayList<TopViewport>();
-		for (int i=0; i<layers; i++) {
-			TopViewport v = new TopViewport(rows, cols, i);
-			topViewports.add(v);
-			super.add(v, String.valueOf(i));
-			v.addMouseListener(this);
-			v.addMouseMotionListener(this);
-		}
+		viewports = new ArrayList<AbstractViewport>();
 	}
 	
 	public void setLayer(int idx) {
@@ -83,15 +72,15 @@ public class TopViewportStack extends JPanel implements MouseInputListener, ITop
 	
 	public void lastLayer() {
 		layout.last(this);
-		currentLayer=layers-1;
+		currentLayer = viewports.size()-1;
 	}
 	
 	public int getCurrentLayer() {
 		return currentLayer;
 	}
 
-	public List<TopViewport> getTopViewports() {
-		return topViewports;
+	public List<AbstractViewport> getViewports() {
+		return viewports;
 	}
 
     public GridViewEventManager getGridViewEventManager() {
@@ -130,7 +119,7 @@ public class TopViewportStack extends JPanel implements MouseInputListener, ITop
 	public void mouseClicked(MouseEvent e) {}
 	
 	private int getRowFromPoint(Point p) {
-		Dimension dim = topViewports.get(currentLayer).getViewportLabel(0,0).getSize();
+		Dimension dim = viewports.get(currentLayer).getViewportLabel(0,0).getSize();
 		int labelH = (int)dim.getHeight();
 		int y = (int)p.getY();
 		int r = (int)(y / labelH);
@@ -139,11 +128,26 @@ public class TopViewportStack extends JPanel implements MouseInputListener, ITop
 	}
 	
 	private int getColFromPoint(Point p) {
-		Dimension dim = topViewports.get(currentLayer).getViewportLabel(0,0).getSize();
+		Dimension dim = viewports.get(currentLayer).getViewportLabel(0,0).getSize();
 		int labelW = (int)dim.getWidth();
 		int x = (int)p.getX();
 		int c = (int)(x / labelW);
 		
 		return c;
+    }
+
+    @Override
+    public void addViewport(AbstractViewport viewport) {
+        viewports.add(viewport);
+        super.add(viewport, String.valueOf(viewports.size()));
+		viewport.addMouseListener(this);
+		viewport.addMouseMotionListener(this);
+    }
+
+    @Override
+    public void removeViewport(AbstractViewport viewport) {
+        viewport.removeMouseListener(this);
+		viewport.removeMouseMotionListener(this);
+        viewports.remove(viewport);
     }
 }

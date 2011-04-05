@@ -25,7 +25,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import net.fossar.view.scenery.grid2d.TopViewportStack;
+import net.fossar.view.scenery.grid2d.ViewportStack;
 import net.fossar.view.toolbar.MainToolBar;
 
 import org.slf4j.Logger;
@@ -43,11 +43,11 @@ public class MainFrame extends JFrame implements IMainFrame {
 	
 	
 	private MainToolBar mainToolBar;
-	private TopViewportStack topViewportStack;
+	private ViewportStack viewportStack;
 	
-	public MainFrame(MainToolBar mtb, TopViewportStack vps) {
+	public MainFrame(MainToolBar mtb, ViewportStack vps) {
 		this.mainToolBar = mtb;
-		this.topViewportStack = vps;
+		this.viewportStack = vps;
 		init();
 	}
 
@@ -64,9 +64,9 @@ public class MainFrame extends JFrame implements IMainFrame {
 		
 		// Viewports
 		JPanel p = new JPanel();
-		p.add(topViewportStack);
+		p.add(viewportStack);
 		JScrollPane scrollPaneViewport = new JScrollPane(p);
-		topViewportStack.firstLayer();
+		viewportStack.firstLayer();
 		
 		pane.add(scrollPaneViewport);
 		pane.add(mainToolBar);
@@ -76,7 +76,7 @@ public class MainFrame extends JFrame implements IMainFrame {
 		super.setVisible(true);
 	}
 	
-	public TopViewportStack getTopViewportStack() {
-		return topViewportStack;
+	public ViewportStack getViewportStack() {
+		return viewportStack;
 	}
 }
