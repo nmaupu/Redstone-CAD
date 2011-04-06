@@ -26,6 +26,8 @@ import net.fossar.model.Direction;
 import net.fossar.model.core.block.AbstractBlock;
 import net.fossar.model.core.block.Block;
 import net.fossar.model.core.block.DataBlock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  */
@@ -35,6 +37,8 @@ public class AdjacentBlocks extends HashMap<Direction, DataBlock> {
     protected List<DataBlock> alreadyProcessed;
 
     protected DataBlock centralBlock;
+
+    protected static Logger logger = LoggerFactory.getLogger(AdjacentBlocks.class);
 
     public AdjacentBlocks(DataGrid datagrid, DataBlock centralBlock) {
 		this.datagrid = datagrid;
@@ -79,9 +83,11 @@ public class AdjacentBlocks extends HashMap<Direction, DataBlock> {
     }
 
     public Map<Direction, DataBlock> getUpperBlocks(){
+        logger.debug("getUpperBlocks : {}", centralBlock);
         return datagrid.getAdjacentBlockDirection(centralBlock,  1);
     }
         public Map<Direction, DataBlock> getDownBlocks(){
+        logger.debug("getDownBlocks : {}", centralBlock);
         return datagrid.getAdjacentBlockDirection(centralBlock,  -1);
     }
 }

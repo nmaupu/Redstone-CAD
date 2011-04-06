@@ -61,16 +61,17 @@ public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
     }
 
     private void followBelowWire(AdjacentBlocks adjacentBlocks) {
+        logger.debug("> followBelowWire");
         Map<Direction, DataBlock> belowBlocks = adjacentBlocks.getDownBlocks();
          for (Map.Entry<Direction, DataBlock> belowBlock : belowBlocks.entrySet()) {
             if (belowBlock.getValue().getBlock() instanceof Wire && adjacentBlocks.get(
                     belowBlock.getKey()).getBlock() instanceof Air) {
                 //this is the case where wire is below and connected to current wire, without a block above on it.
-                logger.debug("attempting to go below "+ this);
+                logger.debug("attempting to go below {} to {}", this, belowBlock.getValue());
                 updateAdjacentWire(adjacentBlocks, belowBlock.getValue());
             }
         }
-
+        logger.debug("< followBelowWire");
 
     }
 
