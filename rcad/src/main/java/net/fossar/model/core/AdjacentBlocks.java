@@ -90,4 +90,11 @@ public class AdjacentBlocks extends HashMap<Direction, DataBlock> {
         logger.debug("getDownBlocks : {}", centralBlock);
         return datagrid.getAdjacentBlockDirection(centralBlock,  -1);
     }
+
+    @Override
+    public DataBlock get(Object key) {
+        DataBlock dataBlock = super.get(key);
+        logger.debug("getting {} : {} ", key, dataBlock);
+        return dataBlock;
+    }
 }
