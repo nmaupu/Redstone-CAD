@@ -30,9 +30,8 @@ import org.slf4j.LoggerFactory;
 
 public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
     protected static Logger logger = LoggerFactory.getLogger(Wire.class);
-    
-    protected static Set<Direction> horizontalPropagation = Collections.synchronizedSet(
-            EnumSet.of(Direction.UP, Direction.LEFT, Direction.RIGHT, Direction.DOWN));
+
+    protected static Set<Direction> horizontalPropagation = Collections.synchronizedSet(EnumSet.of(Direction.UP, Direction.LEFT, Direction.RIGHT, Direction.DOWN));
 
     public Wire() {
         super(POWER_OFF, 0);
@@ -69,9 +68,8 @@ public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
     private void followBelowWire(AdjacentBlocks adjacentBlocks) {
         logger.debug("> followBelowWire");
         Map<Direction, DataBlock> belowBlocks = adjacentBlocks.getDownBlocks();
-         for (Map.Entry<Direction, DataBlock> belowBlock : belowBlocks.entrySet()) {
-            if (belowBlock.getValue().getBlock() instanceof Wire && adjacentBlocks.get(
-                    belowBlock.getKey()).getBlock() instanceof Air) {
+        for (Map.Entry<Direction, DataBlock> belowBlock : belowBlocks.entrySet()) {
+            if (belowBlock.getValue().getBlock() instanceof Wire && adjacentBlocks.get(belowBlock.getKey()).getBlock() instanceof Air) {
                 //this is the case where wire is below and connected to current wire, without a block above on it.
                 logger.debug("attempting to go below {} to {}", this, belowBlock.getValue());
                 updateAdjacentWire(adjacentBlocks, belowBlock.getValue());
@@ -96,12 +94,11 @@ public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
             //There cannot be upper wire in this case.
             return;
         }
-        
+
         Map<Direction, DataBlock> upperBlocks = adjacentBlocks.getUpperBlocks();
         // Iterate over the 4 possible abstractBlocks (UP, DOWN, LEFT, RIGHT) above the current wire.
         for (Map.Entry<Direction, DataBlock> upperBlock : upperBlocks.entrySet()) {
-            if (upperBlock.getValue().getBlock() instanceof Wire && adjacentBlocks.get(
-                    upperBlock.getKey()).getBlock() instanceof Block) {
+            if (upperBlock.getValue().getBlock() instanceof Wire && adjacentBlocks.get(upperBlock.getKey()).getBlock() instanceof Block) {
                 //this is the case where wire is over a block and connected to current wire.
                 updateAdjacentWire(adjacentBlocks, upperBlock.getValue());
             }
@@ -112,20 +109,16 @@ public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
 
     private void updateAdjacentWire(AdjacentBlocks adjacentBlocks, DataBlock value) {
         AbstractBlock block = value.getBlock();
-        assert (block instanceof Wire) : "should not happen";
+        assert (block instanceof Wire) : "Only follow wires";
         Wire wire = (Wire) block;
-        
-        AdjacentBlocks adjacents = new AdjacentBlocks(adjacentBlocks, value, true);
-//        if (!adjacents.getAlreadyProcessed().contains(
-//                value) || ((block.getOutput() <= getOutput() - 1) && getOutput() != 0)) {
-            
-            if(wire.needsUpdate(getOutput())){
-                logger.debug("i'm  " + getOutput() + " going to " + block.getOutput());
-                block.setInput(getOutput());
-                block.doUpdate(adjacents);
-                logger.debug("destination : " + value + " is now " + block.getOutput());
-            }
-//        }
+
+        if (wire.needsUpdate(getOutput())) {
+            AdjacentBlocks adjacents = new AdjacentBlocks(adjacentBlocks, value, true);
+            logger.debug("i'm  " + getOutput() + " going to " + block.getOutput());
+            block.setInput(getOutput());
+            block.doUpdate(adjacents);
+            logger.debug("destination : " + value + " is now " + block.getOutput());
+        }
     }
 
     @Override
