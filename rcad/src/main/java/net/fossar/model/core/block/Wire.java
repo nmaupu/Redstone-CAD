@@ -50,19 +50,20 @@ public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
     @Override
     public void doUpdate(AdjacentBlocks adjacentBlocks) {
 
-        for (Map.Entry<Direction, DataBlock> entry : adjacentBlocks.entrySet()) {
-            DataBlock value = entry.getValue();
-            Direction direction = entry.getKey();
-            AbstractBlock block = value.getBlock();
+        followHorizontalWires(adjacentBlocks);
 
+        followUpperWire(adjacentBlocks, Direction.ABOVE, adjacentBlocks.get(Direction.ABOVE));
 
-            if (block instanceof Wire && horizontalPropagation.contains(direction)) {
-                logger.debug("dealing with " + value);
+        followBelowWire(adjacentBlocks);
+    }
+
+    private void followHorizontalWires(AdjacentBlocks adjacentBlocks) {
+        for (Direction horizontal : horizontalPropagation) {
+            DataBlock value = adjacentBlocks.get(horizontal);
+            if(value != null && value.getBlock() instanceof Wire){
                 updateAdjacentWire(adjacentBlocks, value);
             }
-            followUpperWire(adjacentBlocks, direction, value);
         }
-        followBelowWire(adjacentBlocks);
     }
 
     private void followBelowWire(AdjacentBlocks adjacentBlocks) {
@@ -88,6 +89,10 @@ public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
      * @param value
      */
     private void followUpperWire(AdjacentBlocks adjacentBlocks, Direction direction, DataBlock value) {
+
+        if(value == null){
+            return;
+        }
 
         AbstractBlock block = value.getBlock();
         if (!(direction == Direction.ABOVE && BlockType.getBlockType(block) == BlockType.AIR)) {
