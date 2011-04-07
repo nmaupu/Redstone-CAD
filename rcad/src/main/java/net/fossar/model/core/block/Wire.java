@@ -52,7 +52,7 @@ public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
 
         followHorizontalWires(adjacentBlocks);
 
-        followUpperWire(adjacentBlocks, Direction.ABOVE, adjacentBlocks.get(Direction.ABOVE));
+        followUpperWire(adjacentBlocks);
 
         followBelowWire(adjacentBlocks);
     }
@@ -69,12 +69,17 @@ public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
     private void followBelowWire(AdjacentBlocks adjacentBlocks) {
         logger.debug("> followBelowWire");
         Map<Direction, DataBlock> belowBlocks = adjacentBlocks.getDownBlocks();
-        for (Map.Entry<Direction, DataBlock> belowBlock : belowBlocks.entrySet()) {
-            if (belowBlock.getValue().getBlock() instanceof Wire && adjacentBlocks.get(belowBlock.getKey()).getBlock() instanceof Air) {
-                //this is the case where wire is below and connected to current wire, without a block above on it.
-                logger.debug("attempting to go below {} to {}", this, belowBlock.getValue());
-                updateAdjacentWire(adjacentBlocks, belowBlock.getValue());
+        for (Direction horizontal : horizontalPropagation) {
+            DataBlock belowBlock = belowBlocks.get(horizontal);
+            if(belowBlock == null){
+                continue;
             }
+            //this is the case where wire is below and connected to current wire, without a block above on it.
+            if (belowBlock.getBlock() instanceof Wire && adjacentBlocks.get(horizontal).getBlock() instanceof Air) {
+                logger.debug("attempting to go below {} to {}", this, belowBlock);
+                updateAdjacentWire(adjacentBlocks, belowBlock);
+            }
+            
         }
         logger.debug("< followBelowWire");
 
@@ -85,18 +90,13 @@ public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
      * A upper wire can only be followed when the block above the wire is an Air block
      *
      * @param adjacentBlocks
-     * @param direction
-     * @param value
+     * 
      */
-    private void followUpperWire(AdjacentBlocks adjacentBlocks, Direction direction, DataBlock value) {
+    private void followUpperWire(AdjacentBlocks adjacentBlocks) {
 
-        if(value == null){
-            return;
-        }
-
-        AbstractBlock block = value.getBlock();
-        if (!(direction == Direction.ABOVE && BlockType.getBlockType(block) == BlockType.AIR)) {
-            //There cannot be upper wire in this case.
+        DataBlock value = adjacentBlocks.get(Direction.ABOVE);
+        if (value == null || !(BlockType.getBlockType(value.getBlock()) == BlockType.AIR)) {
+            //There cannot be upper wires in this case.
             return;
         }
 
