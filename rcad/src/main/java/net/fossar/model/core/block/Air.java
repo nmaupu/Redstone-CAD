@@ -53,8 +53,8 @@ public class Air extends AbstractBlock {
 	
 
 	@Override
-	public void setInput(int power) {
-		return;
+	public boolean setInput(int power) {
+		return false;
 	}
 
 	@Override

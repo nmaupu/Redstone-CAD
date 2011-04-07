@@ -37,7 +37,7 @@ public abstract class AbstractBlock implements Model {
 
 	protected List<BlockPowerListener> listeners = null;
 
-	private int powerToInject = 0;
+	protected int powerToInject = 0;
 	private long delay = 0;
 	private Time lastUpdate = new Time();
 
@@ -53,10 +53,10 @@ public abstract class AbstractBlock implements Model {
          direction = EnumSet.noneOf(Direction.class);
     }
 
-    public void setInput(int power) {
-
+    public boolean setInput(int power) {
 		powerToInject = power;
 		power = getOutput();
+        return true;
 	}
 
 	public int getOutput() {

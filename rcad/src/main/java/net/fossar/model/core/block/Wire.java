@@ -38,6 +38,11 @@ public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
         super(POWER_OFF, 0);
     }
 
+    public boolean needsUpdate(int power) {
+        return !(power <= this.power);
+
+    }
+
     @Override
     public int getOutput() {
         return super.getOutput() == 0 ? 0 : super.getOutput() - 1;
@@ -45,6 +50,7 @@ public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
 
     @Override
     public void doUpdate(AdjacentBlocks adjacentBlocks) {
+
         for (Map.Entry<Direction, DataBlock> entry : adjacentBlocks.entrySet()) {
             DataBlock value = entry.getValue();
             Direction direction = entry.getKey();
@@ -105,15 +111,21 @@ public class Wire extends AbstractBlock implements PassiveBlock, DirectedBlock {
     }
 
     private void updateAdjacentWire(AdjacentBlocks adjacentBlocks, DataBlock value) {
-        AdjacentBlocks adjacents = new AdjacentBlocks(adjacentBlocks, value, true);
         AbstractBlock block = value.getBlock();
-        if (!adjacents.getAlreadyProcessed().contains(
-                value) || ((block.getOutput() <= getOutput() - 1) && getOutput() != 0)) {
-            logger.debug("i'm  " + getOutput() + " going to " + block.getOutput());
-            block.setInput(getOutput());
-            block.doUpdate(adjacents);
-            logger.debug("destination : " + value + " is now " + block.getOutput());
-        }
+        assert (block instanceof Wire) : "should not happen";
+        Wire wire = (Wire) block;
+        
+        AdjacentBlocks adjacents = new AdjacentBlocks(adjacentBlocks, value, true);
+//        if (!adjacents.getAlreadyProcessed().contains(
+//                value) || ((block.getOutput() <= getOutput() - 1) && getOutput() != 0)) {
+            
+            if(wire.needsUpdate(getOutput())){
+                logger.debug("i'm  " + getOutput() + " going to " + block.getOutput());
+                block.setInput(getOutput());
+                block.doUpdate(adjacents);
+                logger.debug("destination : " + value + " is now " + block.getOutput());
+            }
+//        }
     }
 
     @Override
