@@ -42,8 +42,6 @@ public class SimpleLeverTest {
 		dataGrid.addBlock(torch, 0, 2, 0);
 
 		lever.powerOn();
-
-
 		dataGrid.doUpdate();
 
 		Assert.assertEquals(AbstractBlock.POWER_SOURCE, torch.getOutput());
@@ -63,7 +61,7 @@ public class SimpleLeverTest {
 		dataGrid.doUpdate();
 
 		Assert.assertEquals(AbstractBlock.POWER_OFF, torch.getOutput());
-		Assert.assertEquals(AbstractBlock.POWER_SOURCE, block.getOutput());
+		Assert.assertEquals(AbstractBlock.POWER_MAX, block.getOutput());
 		Assert.assertEquals(AbstractBlock.POWER_SOURCE, lever.getOutput());
 
 		lever.powerOff();
@@ -71,7 +69,7 @@ public class SimpleLeverTest {
 		dataGrid.doUpdate();
 
 		Assert.assertEquals(AbstractBlock.POWER_OFF, torch.getOutput());
-		Assert.assertEquals(AbstractBlock.POWER_SOURCE, block.getOutput());
+		Assert.assertEquals(AbstractBlock.POWER_MAX, block.getOutput());
 		Assert.assertEquals(AbstractBlock.POWER_OFF, lever.getOutput());
 
 		dataGrid.tick();
