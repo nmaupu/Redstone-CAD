@@ -39,7 +39,7 @@ public abstract class AbstractBlock implements Model {
 
 	protected int powerToInject = 0;
 	private long delay = 0;
-	private Time lastUpdate = new Time();
+	protected Time lastUpdate = new Time();
 
 	public abstract void doUpdate(AdjacentBlocks adjacentBlocks);
 
@@ -61,9 +61,9 @@ public abstract class AbstractBlock implements Model {
 
 	public int getOutput() {
 		if (lastUpdate.isExpired(delay)) {
-			lastUpdate = new Time();
 			if (power != powerToInject) {
-				power = powerToInject;
+                lastUpdate = new Time();
+                power = powerToInject;
 				// Notify listeners
 				dispatchEventPowerChange();
 			}
