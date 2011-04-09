@@ -17,20 +17,31 @@
 
 package net.fossar.view.scenery.grid2d;
 
-import net.fossar.presenter.event.GridViewEvent;
-import net.fossar.view.IView;
-
-import javax.swing.event.MouseInputListener;
+import java.awt.CardLayout;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by IntelliJ IDEA.
- * User: nmaupu
- * Date: 02/04/11
- * Time: 00:12
- * To change this template use File | Settings | File Templates.
- */
-public interface IViewportStack extends IView {
-    public void addViewport(AbstractViewport viewport);
-    public void removeViewport(AbstractViewport viewport);
+import javax.swing.JPanel;
+
+import net.fossar.presenter.event.GridViewEvent;
+
+import net.fossar.presenter.event.GridViewEventManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class TopViewportStack extends ViewportStack {
+	private static final Logger logger = LoggerFactory.getLogger(TopViewportStack.class);
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		int r = getRowFromPoint(e.getPoint());
+		int c = getColFromPoint(e.getPoint());
+
+        gridViewEventManager.notifyPresenterListeners(
+            new GridViewEvent(e.getSource(), r, c, currentLayer)
+        );
+	}
 }

@@ -17,64 +17,66 @@
 
 package net.fossar.view.scenery.grid2d;
 
-import java.awt.CardLayout;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JPanel;
-import javax.swing.event.MouseInputListener;
-
 import net.fossar.presenter.event.GridViewEvent;
-
 import net.fossar.presenter.event.GridViewEventManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ViewportStack extends JPanel implements MouseInputListener, IViewportStack {
-	private static final long serialVersionUID = 1L;
+import javax.swing.*;
+import javax.swing.event.MouseInputListener;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Created by IntelliJ IDEA.
+ * User: nmaupu
+ * Date: 10/04/11
+ * Time: 00:05
+ * To change this template use File | Settings | File Templates.
+ */
+public abstract class ViewportStack extends JPanel implements IViewportStack, MouseInputListener {
+    private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(ViewportStack.class);
-		
-	private List<AbstractViewport> viewports = null;
+
+	protected List<AbstractViewport> viewports = null;
 	private CardLayout layout = new CardLayout();
-	private int currentLayer = 0;
-    private GridViewEventManager gridViewEventManager = new GridViewEventManager();
-	
-	public ViewportStack() {
+	protected int currentLayer = 0;
+    protected GridViewEventManager gridViewEventManager = new GridViewEventManager();
+
+    public ViewportStack() {
 		super();
 		super.setLayout(layout);
-		
+
 		viewports = new ArrayList<AbstractViewport>();
 	}
-	
-	public void setLayer(int idx) {
+
+    public void setLayer(int idx) {
 		layout.show(this, String.valueOf(idx));
 		currentLayer = idx;
 	}
-	
+
 	public void nextLayer() {
 		layout.next(this);
 		currentLayer++;
 	}
-	
+
 	public void previousLayer() {
 		layout.previous(this);
 		currentLayer--;
 	}
-	
+
 	public void firstLayer() {
 		layout.first(this);
 		currentLayer=0;
 	}
-	
+
 	public void lastLayer() {
 		layout.last(this);
 		currentLayer = viewports.size()-1;
 	}
-	
+
 	public int getCurrentLayer() {
 		return currentLayer;
 	}
@@ -87,25 +89,8 @@ public class ViewportStack extends JPanel implements MouseInputListener, IViewpo
         return gridViewEventManager;
     }
 
-	@Override
-	public void mousePressed(MouseEvent e) {
-		int r = getRowFromPoint(e.getPoint());
-		int c = getColFromPoint(e.getPoint());
-
-        gridViewEventManager.notifyPresenterListeners(
-            new GridViewEvent(e.getSource(), r, c, currentLayer)
-        );
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		int r = getRowFromPoint(e.getPoint());
-		int c = getColFromPoint(e.getPoint());
-		
-		gridViewEventManager.notifyPresenterListeners(
-                new GridViewEvent(e.getSource(), r, c, currentLayer)
-        );
-	}
+    @Override
+	public abstract void mousePressed(MouseEvent e);
 
 	@Override
 	public void mouseReleased(MouseEvent e) {}
@@ -117,22 +102,27 @@ public class ViewportStack extends JPanel implements MouseInputListener, IViewpo
 	public void mouseMoved(MouseEvent e) {}
 	@Override
 	public void mouseClicked(MouseEvent e) {}
-	
-	private int getRowFromPoint(Point p) {
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        // When mouse is dragged, act like a mouse pressed event
+        mousePressed(e);
+    }
+
+	protected int getRowFromPoint(Point p) {
 		Dimension dim = viewports.get(currentLayer).getViewportLabel(0,0).getSize();
 		int labelH = (int)dim.getHeight();
 		int y = (int)p.getY();
 		int r = (int)(y / labelH);
-		
+
 		return r;
 	}
-	
-	private int getColFromPoint(Point p) {
+
+	protected int getColFromPoint(Point p) {
 		Dimension dim = viewports.get(currentLayer).getViewportLabel(0,0).getSize();
 		int labelW = (int)dim.getWidth();
 		int x = (int)p.getX();
 		int c = (int)(x / labelW);
-		
+
 		return c;
     }
 

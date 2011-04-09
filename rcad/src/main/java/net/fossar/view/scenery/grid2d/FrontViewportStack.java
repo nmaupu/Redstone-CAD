@@ -18,19 +18,33 @@
 package net.fossar.view.scenery.grid2d;
 
 import net.fossar.presenter.event.GridViewEvent;
-import net.fossar.view.IView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.swing.event.MouseInputListener;
+import javax.swing.*;
 import java.awt.event.MouseEvent;
 
 /**
  * Created by IntelliJ IDEA.
  * User: nmaupu
- * Date: 02/04/11
- * Time: 00:12
+ * Date: 10/04/11
+ * Time: 00:05
  * To change this template use File | Settings | File Templates.
  */
-public interface IViewportStack extends IView {
-    public void addViewport(AbstractViewport viewport);
-    public void removeViewport(AbstractViewport viewport);
+public class FrontViewportStack extends ViewportStack {
+    private static final Logger logger = LoggerFactory.getLogger(FrontViewportStack.class);
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        int r = getRowFromPoint(e.getPoint());
+        int c = getColFromPoint(e.getPoint());
+
+        // r,c and l does not correspond to r,c and l in datagrid for this view !
+        int realR = r;
+        int realC = currentLayer;
+        int realL = c;
+        gridViewEventManager.notifyPresenterListeners(
+            new GridViewEvent(e.getSource(), realR, realC, realL)
+        );
+    }
 }
