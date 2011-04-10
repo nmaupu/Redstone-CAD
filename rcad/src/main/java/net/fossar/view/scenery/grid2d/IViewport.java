@@ -27,4 +27,7 @@ import net.fossar.view.IView;
  * To change this template use File | Settings | File Templates.
  */
 public interface IViewport extends IView {
+    public int getRows();
+	public int getCols();
+	public int getLayerIdx();
 }

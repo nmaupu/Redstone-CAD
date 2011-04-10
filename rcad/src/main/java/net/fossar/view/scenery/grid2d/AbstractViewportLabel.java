@@ -96,7 +96,7 @@ public abstract class AbstractViewportLabel extends JLabel implements IView {
 	}
 
     /**
-     * Fix a new dataBlock and repaint this label
+     * Set a new dataBlock and repaint this label
      * @param dataBlock
      */
     public void repaint(final DataBlock dataBlock) {

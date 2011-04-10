@@ -17,10 +17,32 @@
 
 package net.fossar.view.scenery.grid2d;
 
-import net.fossar.view.IView;
+import net.fossar.model.Direction;
 
-public interface ITopViewport extends IViewport {
-	public int getRows();
-	public int getCols();
-	public int getLayerIdx();
+import java.awt.*;
+import java.util.List;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: nmaupu
+ * Date: 10/04/11
+ * Time: 11:16
+ * To change this template use File | Settings | File Templates.
+ */
+public class FrontViewportLabel extends AbstractViewportLabel {
+    @Override
+    protected void drawTorch(Graphics2D g, Direction dir) {
+    }
+
+    @Override
+    protected void drawWire(Graphics2D g, List<Direction> dirs) {
+    }
+
+    @Override
+    protected void drawLever(Graphics2D g) {
+    }
+
+    @Override
+    protected void drawButton(Graphics2D g) {
+    }
 }

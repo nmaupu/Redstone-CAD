@@ -49,7 +49,7 @@ public class GridViewEventController implements IController, GridViewEventListen
 		int l = event.getLay();
 		IDataGrid dg = Director.dataGridController.getDataGrid();
 		
-		if (r >= 0 && r <= dg.getRows()-1 && c >= 0 && c <= dg.getCols()-1) {
+		if (r >= 0 && r < dg.getRows() && c >= 0 && c < dg.getCols() && l >= 0 && l < dg.getLayers()) {
 			AbstractBlock newBlock = Director.toolBarActionController.createInstanceOfCurrentSelectedBlock();
             logger.info("Inserting block type={} at (r,c,l)=({},{},{})", new Object[] {newBlock, r, c, });
 			dg.setBlock(newBlock, r, c, l);

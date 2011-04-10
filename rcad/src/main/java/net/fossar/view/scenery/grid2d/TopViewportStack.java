@@ -32,16 +32,24 @@ import net.fossar.presenter.event.GridViewEventManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Represents a top view stack viewport
+ */
 public class TopViewportStack extends ViewportStack {
 	private static final Logger logger = LoggerFactory.getLogger(TopViewportStack.class);
 
-	@Override
-	public void mousePressed(MouseEvent e) {
-		int r = getRowFromPoint(e.getPoint());
-		int c = getColFromPoint(e.getPoint());
+    @Override
+    protected int getCorrespondingGridRow(int row, int col, int lay) {
+        return row;
+    }
 
-        gridViewEventManager.notifyPresenterListeners(
-            new GridViewEvent(e.getSource(), r, c, currentLayer)
-        );
-	}
+    @Override
+    protected int getCorrespondingGridCol(int row, int col, int lay) {
+        return col;
+    }
+
+    @Override
+    protected int getCorrespondingGridLay(int row, int col, int lay) {
+        return lay;
+    }
 }

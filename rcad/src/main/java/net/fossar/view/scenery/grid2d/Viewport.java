@@ -17,23 +17,18 @@
 
 package net.fossar.view.scenery.grid2d;
 
-import java.awt.GridLayout;
-
-import javax.swing.*;
-
 import net.fossar.model.core.block.DataBlock;
 
-import net.fossar.view.Colors;
 import net.fossar.view.IDataGridDisplayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("serial")
-public class TopViewport extends AbstractViewport implements ITopViewport, IDataGridDisplayer {
+public class Viewport extends AbstractViewport implements IDataGridDisplayer, IViewport {
 	@SuppressWarnings("unused")
-	private Logger logger = LoggerFactory.getLogger(TopViewport.class);
+	private Logger logger = LoggerFactory.getLogger(Viewport.class);
 
-    public TopViewport(int rows, int cols, int layerIdx) {
+    public Viewport(int rows, int cols, int layerIdx) {
         super(rows, cols, layerIdx);
     }
 

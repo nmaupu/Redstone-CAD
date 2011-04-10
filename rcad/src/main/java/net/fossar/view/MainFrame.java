@@ -25,7 +25,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import net.fossar.view.scenery.grid2d.FrontViewportStack;
+import net.fossar.view.scenery.grid2d.IViewportStack;
 import net.fossar.view.scenery.grid2d.TopViewportStack;
+import net.fossar.view.scenery.grid2d.ViewportStack;
 import net.fossar.view.toolbar.MainToolBar;
 
 import org.slf4j.Logger;
@@ -38,16 +41,18 @@ public class MainFrame extends JFrame implements IMainFrame {
 	
 	public static final String VERSION="0.1";
 	public static final String APPNAME="Redstone CAD";
-	public static final int DEFAULT_WIDTH=800;
-	public static final int DEFAULT_HEIGHT=600;
+	public static final int DEFAULT_WIDTH=1024;
+	public static final int DEFAULT_HEIGHT=800;
 	
 	
 	private MainToolBar mainToolBar;
-	private TopViewportStack viewportStack;
+	private ViewportStack topViewportStack;
+    private ViewportStack frontViewportStack;
 	
-	public MainFrame(MainToolBar mtb, TopViewportStack vps) {
-		this.mainToolBar = mtb;
-		this.viewportStack = vps;
+	public MainFrame(MainToolBar mainToolBar, ViewportStack topViewportStack, ViewportStack frontViewportStack) {
+		this.mainToolBar = mainToolBar;
+		this.topViewportStack = topViewportStack;
+        this.frontViewportStack = frontViewportStack;
 		init();
 	}
 
@@ -64,9 +69,11 @@ public class MainFrame extends JFrame implements IMainFrame {
 		
 		// Viewports
 		JPanel p = new JPanel();
-		p.add(viewportStack);
+		p.add(topViewportStack);
+        p.add(frontViewportStack);
 		JScrollPane scrollPaneViewport = new JScrollPane(p);
-		viewportStack.firstLayer();
+		topViewportStack.firstLayer();
+        frontViewportStack.firstLayer();
 		
 		pane.add(scrollPaneViewport);
 		pane.add(mainToolBar);
@@ -74,9 +81,5 @@ public class MainFrame extends JFrame implements IMainFrame {
 		super.pack();
 		super.setLocationByPlatform(true);
 		super.setVisible(true);
-	}
-	
-	public TopViewportStack getViewportStack() {
-		return viewportStack;
 	}
 }

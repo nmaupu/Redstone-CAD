@@ -25,26 +25,28 @@ import javax.swing.*;
 import java.awt.event.MouseEvent;
 
 /**
- * Created by IntelliJ IDEA.
+ * Represents a front view stack viewport
  * User: nmaupu
  * Date: 10/04/11
  * Time: 00:05
- * To change this template use File | Settings | File Templates.
  */
 public class FrontViewportStack extends ViewportStack {
     private static final Logger logger = LoggerFactory.getLogger(FrontViewportStack.class);
 
     @Override
-    public void mousePressed(MouseEvent e) {
-        int r = getRowFromPoint(e.getPoint());
-        int c = getColFromPoint(e.getPoint());
-
-        // r,c and l does not correspond to r,c and l in datagrid for this view !
-        int realR = r;
-        int realC = currentLayer;
-        int realL = c;
-        gridViewEventManager.notifyPresenterListeners(
-            new GridViewEvent(e.getSource(), realR, realC, realL)
-        );
+    protected int getCorrespondingGridRow(int row, int col, int lay) {
+        return row;
     }
+
+    @Override
+    protected int getCorrespondingGridCol(int row, int col, int lay) {
+        return lay;
+    }
+
+    @Override
+    protected int getCorrespondingGridLay(int row, int col, int lay) {
+        return col;
+    }
+
+
 }
