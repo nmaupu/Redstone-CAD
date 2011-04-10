@@ -19,9 +19,9 @@ package net.fossar.presenter;
 
 import net.fossar.view.IMainFrame;
 import net.fossar.view.MainFrame;
-import net.fossar.view.scenery.grid2d.FrontViewportStack;
-import net.fossar.view.scenery.grid2d.Viewport;
-import net.fossar.view.scenery.grid2d.TopViewportStack;
+import net.fossar.view.scenery.grid2d.FrontViewport;
+import net.fossar.view.scenery.grid2d.TopViewport;
+import net.fossar.view.scenery.grid2d.ViewportStack;
 import net.fossar.view.toolbar.MainToolBar;
 
 public abstract class Director {
@@ -29,20 +29,21 @@ public abstract class Director {
 	protected static final GridViewEventController gridViewEventController = new GridViewEventController();
 	protected static final ToolBarActionController toolBarActionController = new ToolBarActionController();
 	protected static final MainToolBar mainToolBar = new MainToolBar(toolBarActionController);
-	protected static final TopViewportStack topViewportStack = new TopViewportStack();
-    protected static final FrontViewportStack frontViewportStack = new FrontViewportStack();
+	protected static final ViewportStack topViewportStack = new ViewportStack();
+    protected static final ViewportStack frontViewportStack = new ViewportStack();
 	protected static IMainFrame mainFrame = new MainFrame(mainToolBar, topViewportStack, frontViewportStack);
 	
 	
 	public static void doInit() {
         /* Top viewports creation */
         for(int i=0; i<dataGridController.getDataGrid().getLayers(); i++) {
-            topViewportStack.addViewport(new Viewport(dataGridController.getDataGrid().getRows(),
+            topViewportStack.addViewport(new TopViewport(dataGridController.getDataGrid().getRows(),
                     dataGridController.getDataGrid().getCols(), i));
         }
 
+        /* Front viewports creation */
         for(int i=0; i<dataGridController.getDataGrid().getCols(); i++) {
-            frontViewportStack.addViewport(new Viewport(dataGridController.getDataGrid().getRows(),
+            frontViewportStack.addViewport(new FrontViewport(dataGridController.getDataGrid().getRows(),
                     dataGridController.getDataGrid().getLayers(), i));
         }
 

@@ -51,7 +51,7 @@ public class GridViewEventController implements IController, GridViewEventListen
 		
 		if (r >= 0 && r < dg.getRows() && c >= 0 && c < dg.getCols() && l >= 0 && l < dg.getLayers()) {
 			AbstractBlock newBlock = Director.toolBarActionController.createInstanceOfCurrentSelectedBlock();
-            logger.info("Inserting block type={} at (r,c,l)=({},{},{})", new Object[] {newBlock, r, c, });
+            logger.info("Inserting block type={} at (r,c,l)=({},{},{})", new Object[] {newBlock, r, c, l});
 			dg.setBlock(newBlock, r, c, l);
 
             // Fire event to redraw this label and its adjacent blocks

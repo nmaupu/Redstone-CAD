@@ -18,6 +18,7 @@
 package net.fossar.view.scenery.grid2d;
 
 import net.fossar.model.Direction;
+import net.fossar.view.Colors;
 
 import java.awt.*;
 import java.util.List;
@@ -45,4 +46,14 @@ public class FrontViewportLabel extends AbstractViewportLabel {
     @Override
     protected void drawButton(Graphics2D g) {
     }
+
+    @Override
+    public void drawBlock(Graphics2D g) {
+		this.setBackground(Colors.COLOR_BLOCK);
+	}
+
+    @Override
+	public void drawAir(Graphics2D g) {
+		this.setBackground(Colors.COLOR_AIR);
+	}
 }

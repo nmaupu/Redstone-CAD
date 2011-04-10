@@ -17,26 +17,30 @@
 
 package net.fossar.view.scenery.grid2d;
 
-import java.awt.CardLayout;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
+import net.fossar.model.core.block.DataBlock;
 
-import javax.swing.JPanel;
-
-import net.fossar.presenter.event.GridViewEvent;
-
-import net.fossar.presenter.event.GridViewEventManager;
+import net.fossar.view.IDataGridDisplayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Represents a top view stack viewport
- */
-public class TopViewportStack extends ViewportStack {
-	private static final Logger logger = LoggerFactory.getLogger(TopViewportStack.class);
+@SuppressWarnings("serial")
+public class TopViewport extends AbstractViewport implements IDataGridDisplayer, IViewport {
+	@SuppressWarnings("unused")
+	private Logger logger = LoggerFactory.getLogger(TopViewport.class);
+
+    public TopViewport(int rows, int cols, int layerIdx) {
+        super(rows, cols, layerIdx);
+    }
+
+    @Override
+    protected void initLabels() {
+		for(int i=0; i<rows; i++) {
+			for(int j=0; j<cols; j++) {
+				labels[i][j] = new TopViewportLabel();
+				super.add(labels[i][j]);
+			}
+		}
+    }
 
     @Override
     protected int getCorrespondingGridRow(int row, int col, int lay) {

@@ -17,7 +17,10 @@
 
 package net.fossar.view.scenery.grid2d;
 
+import net.fossar.model.core.block.DataBlock;
 import net.fossar.view.Colors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,6 +33,7 @@ import java.awt.*;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class AbstractViewport extends JPanel implements IViewport {
+    private static final Logger logger = LoggerFactory.getLogger(AbstractViewport.class);
     public static final int LABEL_WIDTH  = 25;
 	public static final int BORDER_WIDTH = 1;
 
@@ -52,6 +56,41 @@ public abstract class AbstractViewport extends JPanel implements IViewport {
 	}
 
     protected abstract void initLabels();
+    /**
+     * Get corresponding datagrid row coordinate from viewport coordinates
+     * @param row
+     * @param col
+     * @param lay
+     * @return corresponding datagrid row coordinate
+     */
+    protected abstract int getCorrespondingGridRow(int row, int col, int lay);
+
+    /**
+     * Get corresponding datagrid col coordinate from viewport coordinates
+     * @param row
+     * @param col
+     * @param lay
+     * @return corresponding datagrid col coordinate
+     */
+    protected abstract int getCorrespondingGridCol(int row, int col, int lay);
+
+    /**
+     * Get corresponding datagrid layer coordinate from viewport coordinates
+     * @param row
+     * @param col
+     * @param lay
+     * @return corresponding datagrid layer coordinate
+     */
+    protected abstract int getCorrespondingGridLay(int row, int col, int lay);
+
+    public void drawBlock(DataBlock dataBlock) {
+		logger.debug("Repainting label "+this);
+		// Draw block in specified location (given by dataBlock)
+        int realRow = getCorrespondingGridRow(dataBlock.getRow(), dataBlock.getCol(), dataBlock.getLay());
+        int realCol = getCorrespondingGridCol(dataBlock.getRow(), dataBlock.getCol(), dataBlock.getLay());
+		AbstractViewportLabel label = getViewportLabel(realRow, realCol);
+		label.repaint(dataBlock);
+	}
 
     public AbstractViewportLabel getViewportLabel(int r, int c) {
 		return labels[r][c];

@@ -30,12 +30,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Abstract class to easily create stack of viewports
+ * Class to easily create stack of viewports
  * User: nmaupu
  * Date: 10/04/11
  * Time: 00:05
  */
-public abstract class ViewportStack extends JPanel implements IViewportStack, MouseInputListener {
+public class ViewportStack extends JPanel implements IViewportStack, MouseInputListener {
     private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(ViewportStack.class);
 
@@ -73,7 +73,7 @@ public abstract class ViewportStack extends JPanel implements IViewportStack, Mo
 
 	public void lastLayer() {
 		layout.last(this);
-		currentLayer = viewports.size()-1;
+		currentLayer = viewports.size() > 0 ? viewports.size()-1 : 0;
 	}
 
 	public int getCurrentLayer() {
@@ -108,40 +108,12 @@ public abstract class ViewportStack extends JPanel implements IViewportStack, Mo
 		int viewportCol = getColFromPoint(e.getPoint());
         int viewportLay = currentLayer;
 
-        int r = getCorrespondingGridRow(viewportRow, viewportCol, viewportLay);
-        int c = getCorrespondingGridCol(viewportCol, viewportCol, viewportLay);
-        int l = getCorrespondingGridLay(viewportLay, viewportCol, viewportLay);
+        int r = getViewports().get(currentLayer).getCorrespondingGridRow(viewportRow, viewportCol, viewportLay);
+        int c = getViewports().get(currentLayer).getCorrespondingGridCol(viewportCol, viewportCol, viewportLay);
+        int l = getViewports().get(currentLayer).getCorrespondingGridLay(viewportLay, viewportCol, viewportLay);
 
         gridViewEventManager.notifyPresenterListeners(new GridViewEvent(e.getSource(), r, c, l));
 	}
-
-    /**
-     * Get corresponding datagrid row coordinate from viewport coordinates
-     * @param row
-     * @param col
-     * @param lay
-     * @return corresponding datagrid row coordinate
-     */
-    protected abstract int getCorrespondingGridRow(int row, int col, int lay);
-
-    /**
-     * Get corresponding datagrid col coordinate from viewport coordinates
-     * @param row
-     * @param col
-     * @param lay
-     * @return corresponding datagrid col coordinate
-     */
-    protected abstract int getCorrespondingGridCol(int row, int col, int lay);
-
-    /**
-     * Get corresponding datagrid layer coordinate from viewport coordinates
-     * @param row
-     * @param col
-     * @param lay
-     * @return corresponding datagrid layer coordinate
-     */
-    protected abstract int getCorrespondingGridLay(int row, int col, int lay);
-
 
 	private int getRowFromPoint(Point p) {
 		Dimension dim = viewports.get(currentLayer).getViewportLabel(0,0).getSize();

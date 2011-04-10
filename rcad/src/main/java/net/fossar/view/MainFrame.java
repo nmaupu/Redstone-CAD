@@ -25,9 +25,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import net.fossar.view.scenery.grid2d.FrontViewportStack;
-import net.fossar.view.scenery.grid2d.IViewportStack;
-import net.fossar.view.scenery.grid2d.TopViewportStack;
 import net.fossar.view.scenery.grid2d.ViewportStack;
 import net.fossar.view.toolbar.MainToolBar;
 

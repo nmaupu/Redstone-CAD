@@ -17,21 +17,30 @@
 
 package net.fossar.view.scenery.grid2d;
 
-import net.fossar.presenter.event.GridViewEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import java.awt.event.MouseEvent;
+import net.fossar.view.IDataGridDisplayer;
 
 /**
- * Represents a front view stack viewport
+ * Created by IntelliJ IDEA.
  * User: nmaupu
  * Date: 10/04/11
- * Time: 00:05
+ * Time: 23:50
+ * To change this template use File | Settings | File Templates.
  */
-public class FrontViewportStack extends ViewportStack {
-    private static final Logger logger = LoggerFactory.getLogger(FrontViewportStack.class);
+public class FrontViewport extends AbstractViewport implements IDataGridDisplayer, IViewport {
+
+    public FrontViewport(int rows, int cols, int layerIdx) {
+        super(rows, cols, layerIdx);
+    }
+
+    @Override
+    protected void initLabels() {
+        for(int i=0; i<rows; i++) {
+			for(int j=0; j<cols; j++) {
+				labels[i][j] = new FrontViewportLabel();
+				super.add(labels[i][j]);
+			}
+		}
+    }
 
     @Override
     protected int getCorrespondingGridRow(int row, int col, int lay) {
@@ -47,6 +56,4 @@ public class FrontViewportStack extends ViewportStack {
     protected int getCorrespondingGridLay(int row, int col, int lay) {
         return col;
     }
-
-
 }
