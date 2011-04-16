@@ -17,6 +17,7 @@
 
 package net.fossar.view.scenery.grid2d;
 
+import net.fossar.presenter.event.EventType;
 import net.fossar.presenter.event.GridViewEvent;
 import net.fossar.presenter.event.GridViewEventManager;
 import org.slf4j.Logger;
@@ -57,13 +58,17 @@ public class ViewportStack extends JPanel implements IViewportStack, MouseInputL
 	}
 
 	public void nextLayer() {
-		layout.next(this);
-		currentLayer++;
+        if(currentLayer < viewports.size() - 1) {
+	    	layout.next(this);
+	    	currentLayer++;
+        }
 	}
 
 	public void previousLayer() {
-		layout.previous(this);
-		currentLayer--;
+        if(currentLayer > 0) {
+		    layout.previous(this);
+		    currentLayer--;
+        }
 	}
 
 	public void firstLayer() {
@@ -112,7 +117,7 @@ public class ViewportStack extends JPanel implements IViewportStack, MouseInputL
         int c = getViewports().get(currentLayer).getCorrespondingGridCol(viewportCol, viewportCol, viewportLay);
         int l = getViewports().get(currentLayer).getCorrespondingGridLay(viewportLay, viewportCol, viewportLay);
 
-        gridViewEventManager.notifyPresenterListeners(new GridViewEvent(e.getSource(), r, c, l));
+        gridViewEventManager.notifyPresenterListeners(new GridViewEvent(e.getSource(), r, c, l, EventType.INSERT));
 	}
 
 	private int getRowFromPoint(Point p) {
@@ -131,6 +136,16 @@ public class ViewportStack extends JPanel implements IViewportStack, MouseInputL
 		int c = (int)(x / labelW);
 
 		return c;
+    }
+
+    public void repaintCurrentViewport() {
+        AbstractViewport v = this.viewports.get(currentLayer);
+        for(int r=0; r<v.getRows(); r++) {
+            for (int c=0; c<v.getCols(); c++) {
+                gridViewEventManager.notifyPresenterListeners(new GridViewEvent(v, r, c, currentLayer, EventType.UPDATE));
+            }
+        }
+
     }
 
     @Override

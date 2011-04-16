@@ -44,9 +44,9 @@ public abstract class AbstractViewport extends JPanel implements IViewport {
 	protected final int layerIdx;
 
 	public AbstractViewport(int rows, int cols, int layerIdx) {
-		this.layerIdx = layerIdx;
 		this.rows = rows;
 		this.cols = cols;
+        this.layerIdx = layerIdx;
 
 		super.setLayout(new GridLayout(rows, cols));
         super.setBorder(BorderFactory.createLineBorder(Colors.COLOR_VIEWPORT_BORDERS, AbstractViewport.BORDER_WIDTH));
@@ -88,8 +88,13 @@ public abstract class AbstractViewport extends JPanel implements IViewport {
 		// Draw block in specified location (given by dataBlock)
         int realRow = getCorrespondingGridRow(dataBlock.getRow(), dataBlock.getCol(), dataBlock.getLay());
         int realCol = getCorrespondingGridCol(dataBlock.getRow(), dataBlock.getCol(), dataBlock.getLay());
-		AbstractViewportLabel label = getViewportLabel(realRow, realCol);
-		label.repaint(dataBlock);
+        int realLay = getCorrespondingGridLay(dataBlock.getRow(), dataBlock.getCol(), dataBlock.getLay());
+        // If real layer is not layeridx, label MUST NOT be repaint because it's hidden
+        // Moreover, current label could be another one !
+        if(realLay == layerIdx) {
+		    AbstractViewportLabel label = getViewportLabel(realRow, realCol);
+		    label.repaint(dataBlock);
+        }
 	}
 
     public AbstractViewportLabel getViewportLabel(int r, int c) {

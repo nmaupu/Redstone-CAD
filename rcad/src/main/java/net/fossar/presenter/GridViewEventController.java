@@ -19,6 +19,7 @@ package net.fossar.presenter;
 
 import net.fossar.model.core.IDataGrid;
 import net.fossar.model.core.block.AbstractBlock;
+import net.fossar.presenter.event.EventType;
 import net.fossar.presenter.event.GridViewEvent;
 import net.fossar.presenter.event.GridViewEventListener;
 import net.fossar.presenter.event.PresenterEvent;
@@ -50,9 +51,11 @@ public class GridViewEventController implements IController, GridViewEventListen
 		IDataGrid dg = Director.dataGridController.getDataGrid();
 		
 		if (r >= 0 && r < dg.getRows() && c >= 0 && c < dg.getCols() && l >= 0 && l < dg.getLayers()) {
-			AbstractBlock newBlock = Director.toolBarActionController.createInstanceOfCurrentSelectedBlock();
-            logger.info("Inserting block type={} at (r,c,l)=({},{},{})", new Object[] {newBlock, r, c, l});
-			dg.setBlock(newBlock, r, c, l);
+            if(event.getEventType() == EventType.INSERT) {
+                AbstractBlock newBlock = Director.toolBarActionController.createInstanceOfCurrentSelectedBlock();
+                logger.info("Inserting block type={} at (r,c,l)=({},{},{})", new Object[] {newBlock, r, c, l});
+                dg.setBlock(newBlock, r, c, l);
+            }
 
             // Fire event to redraw this label and its adjacent blocks
             IDataGridDisplayer displayer = (IDataGridDisplayer)event.getSource();

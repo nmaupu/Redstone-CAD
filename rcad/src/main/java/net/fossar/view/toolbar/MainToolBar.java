@@ -33,11 +33,12 @@ public class MainToolBar extends JToolBar implements IView {
 	private Logger logger = LoggerFactory.getLogger(MainToolBar.class);
 	
 	AbstractAction toolBarActionController = null;
-	private JButton blockButton  = new JButton();
-	private JButton airButton    = new JButton();
-	private JButton wireButton   = new JButton();
-	private JButton torchButton  = new JButton();
-	private JButton updateButton = new JButton();
+	private JButton blockButton   = new JButton();
+	private JButton airButton     = new JButton();
+	private JButton wireButton    = new JButton();
+	private JButton torchButton   = new JButton();
+	private JButton updateButton  = new JButton();
+    private JButton repaintButton = new JButton();
 	
 	public MainToolBar(AbstractAction aa) {
 		super("Main tool bar");
@@ -49,6 +50,7 @@ public class MainToolBar extends JToolBar implements IView {
 		wireButton.setAction(toolBarActionController);
 		torchButton.setAction(toolBarActionController);
 		updateButton.setAction(toolBarActionController);
+        repaintButton.setAction(toolBarActionController);
 				
 		// Text
 		blockButton.setText("Block");
@@ -56,6 +58,7 @@ public class MainToolBar extends JToolBar implements IView {
 		wireButton.setText("Wire");
 		torchButton.setText("Torch");
 		updateButton.setText("Update");
+        repaintButton.setText("Repaint");
 		
 		// Action type
 		blockButton.setActionCommand(ToolBarActionController.ACTION_BLOCK);
@@ -63,7 +66,9 @@ public class MainToolBar extends JToolBar implements IView {
 		wireButton.setActionCommand(ToolBarActionController.ACTION_WIRE);
 		torchButton.setActionCommand(ToolBarActionController.ACTION_TORCH);
 		updateButton.setActionCommand(ToolBarActionController.ACTION_UPDATE);
-		
+        repaintButton.setActionCommand(ToolBarActionController.ACTION_REPAINT);
+
+        this.add(repaintButton);
 		this.add(updateButton);
 		this.add(airButton);
 		this.add(blockButton);

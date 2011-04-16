@@ -71,12 +71,11 @@ public class MainFrame extends JFrame implements IMainFrame {
 		JScrollPane scrollPaneViewport = new JScrollPane(p);
 		topViewportStack.firstLayer();
         frontViewportStack.firstLayer();
-		
+
 		pane.add(scrollPaneViewport);
 		pane.add(mainToolBar);
 		
 		super.pack();
 		super.setLocationByPlatform(true);
-		super.setVisible(true);
 	}
 }

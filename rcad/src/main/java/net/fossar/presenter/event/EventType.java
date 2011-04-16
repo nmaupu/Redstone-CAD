@@ -17,35 +17,14 @@
 
 package net.fossar.presenter.event;
 
-
-@SuppressWarnings("serial")
-public class GridViewEvent extends PresenterEvent {
-	private int row;
-	private int col;
-	private int lay;
-    private EventType eventType;
-	
-	public GridViewEvent(Object source, int r, int c , int l, EventType t) {
-		super(source);
-		this.row = r;
-		this.col = c;
-		this.lay = l;
-        this.eventType = t;
-	}
-	
-	public int getRow() {
-		return row;
-	}
-
-	public int getCol() {
-		return col;
-	}
-
-	public int getLay() {
-		return lay;
-	}
-
-    public EventType getEventType() {
-        return eventType;
-    }
+/**
+ * Created by IntelliJ IDEA.
+ * User: nmaupu
+ * Date: 16/04/11
+ * Time: 22:05
+ * To change this template use File | Settings | File Templates.
+ */
+public enum EventType {
+    INSERT,
+    UPDATE
 }
