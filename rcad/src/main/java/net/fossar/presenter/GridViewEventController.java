@@ -19,10 +19,8 @@ package net.fossar.presenter;
 
 import net.fossar.model.core.IDataGrid;
 import net.fossar.model.core.block.AbstractBlock;
-import net.fossar.presenter.event.EventType;
-import net.fossar.presenter.event.GridViewEvent;
-import net.fossar.presenter.event.GridViewEventListener;
-import net.fossar.presenter.event.PresenterEvent;
+import net.fossar.model.core.block.DataBlock;
+import net.fossar.presenter.event.*;
 import net.fossar.view.IDataGridDisplayer;
 
 import org.slf4j.Logger;
@@ -32,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * Class catching current view events
  * @author nmaupu
  */
-public class GridViewEventController implements IController, GridViewEventListener {
+public class GridViewEventController implements IController, IPresenterListener {
 	private Logger logger = LoggerFactory.getLogger(GridViewEvent.class);
 
 	@Override
@@ -51,24 +49,30 @@ public class GridViewEventController implements IController, GridViewEventListen
 		IDataGrid dg = Director.dataGridController.getDataGrid();
 		
 		if (r >= 0 && r < dg.getRows() && c >= 0 && c < dg.getCols() && l >= 0 && l < dg.getLayers()) {
-            if(event.getEventType() == EventType.INSERT) {
-                AbstractBlock newBlock = Director.toolBarActionController.createInstanceOfCurrentSelectedBlock();
-                logger.info("Inserting block type={} at (r,c,l)=({},{},{})", new Object[] {newBlock, r, c, l});
-                dg.setBlock(newBlock, r, c, l);
+            switch(event.getEventType()) {
+                case INSERT:
+                    AbstractBlock newBlock = Director.toolBarActionController.createInstanceOfCurrentSelectedBlock();
+                    logger.info("Inserting block type={} at (r,c,l)=({},{},{})", new Object[] {newBlock, r, c, l});
+                    dg.setBlock(newBlock, r, c, l);
+                    break;
+                case UPDATE:
+                    DataBlock dataBlock = dg.getDataBlock(r, c, l);
+
+                    logger.info("Repainting block and its direct adjacents - "+dataBlock);
+                    // Event fired to redraw this label and its adjacent blocks
+                    IDataGridDisplayer displayer = (IDataGridDisplayer)event.getSource();
+
+                    displayer.drawBlock(dataBlock);
+                    if (r>0)
+                        displayer.drawBlock(dg.getDataBlock(r-1, c, l));
+                    if (r<dg.getRows() - 1)
+                        displayer.drawBlock(dg.getDataBlock(r+1, c, l));
+                    if (c>0)
+                        displayer.drawBlock(dg.getDataBlock(r, c-1, l));
+                    if (c<dg.getCols() - 1)
+                        displayer.drawBlock(dg.getDataBlock(r, c+1, l));
+                    break;
             }
-
-            // Fire event to redraw this label and its adjacent blocks
-            IDataGridDisplayer displayer = (IDataGridDisplayer)event.getSource();
-
-            displayer.drawBlock(dg.getDataBlock(r, c, l));
-            if (r>0)
-                displayer.drawBlock(dg.getDataBlock(r-1, c, l));
-            if (r<dg.getRows() - 1)
-                displayer.drawBlock(dg.getDataBlock(r+1, c, l));
-            if (c>0)
-                displayer.drawBlock(dg.getDataBlock(r, c-1, l));
-            if (c<dg.getCols() - 1)
-                displayer.drawBlock(dg.getDataBlock(r, c+1, l));
         }
 	}
 }

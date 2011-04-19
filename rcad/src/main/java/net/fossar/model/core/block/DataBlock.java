@@ -17,17 +17,22 @@
 
 package net.fossar.model.core.block;
 
+import net.fossar.presenter.event.GenericEvent;
+import net.fossar.presenter.event.PresenterEvent;
+import net.fossar.presenter.event.PresenterEventManager;
+
 public class DataBlock {
 	private int row;
 	private int col;
 	private int lay;
 	private AbstractBlock block;
+    PresenterEventManager dataBlockManager = new PresenterEventManager();
 	
 	public DataBlock(int row, int col, int lay, AbstractBlock block) {
 		this.row = row;
 		this.col = col;
 		this.lay = lay;
-		this.block = block;
+		setBlock(block);
 	}
 	
 	// Getters / setters
@@ -47,20 +52,20 @@ public class DataBlock {
 		return block;
 	}
 
-	public void setRow(int row) {
-		this.row = row;
-	}
-
-	public void setCol(int col) {
-		this.col = col;
-	}
-
-	public void setLay(int lay) {
-		this.lay = lay;
-	}
+    public PresenterEventManager getDataBlockManager() {
+        return dataBlockManager;
+    }
 
 	public void setBlock(AbstractBlock block) {
+        BlockType oldType = BlockType.getBlockType(this.block);
 		this.block = block;
+
+        // Notify listeners if this block is modified
+        if(oldType != BlockType.getBlockType(block)) {
+            PresenterEvent e = new GenericEvent(this);
+            dataBlockManager.notifyPresenterListeners(e);
+        }
+
 	}
 
     public boolean isAt(int fromRow, int fromCol, int fromLay) {

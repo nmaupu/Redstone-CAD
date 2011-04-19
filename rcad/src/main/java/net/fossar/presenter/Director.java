@@ -24,6 +24,9 @@ import net.fossar.view.scenery.grid2d.TopViewport;
 import net.fossar.view.scenery.grid2d.ViewportStack;
 import net.fossar.view.toolbar.MainToolBar;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Director {
 	public static final DataGridController dataGridController = new DataGridController();
 	protected static final GridViewEventController gridViewEventController = new GridViewEventController();
@@ -32,6 +35,7 @@ public abstract class Director {
 	protected static final ViewportStack topViewportStack = new ViewportStack();
     protected static final ViewportStack frontViewportStack = new ViewportStack();
 	protected static IMainFrame mainFrame = new MainFrame(mainToolBar, topViewportStack, frontViewportStack);
+    protected static List<ViewportStack> viewStacks = new ArrayList<ViewportStack>();
 	
 	
 	public static void doInit() {
@@ -46,6 +50,9 @@ public abstract class Director {
             frontViewportStack.addViewport(new FrontViewport(dataGridController.getDataGrid().getRows(),
                     dataGridController.getDataGrid().getLayers(), i));
         }
+
+        viewStacks.add(topViewportStack);
+        viewStacks.add(frontViewportStack);
 
 		// Subscriptions to views
 		topViewportStack.getGridViewEventManager().addPresenterListener(gridViewEventController);

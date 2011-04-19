@@ -33,12 +33,14 @@ import org.slf4j.LoggerFactory;
 public class ToolBarActionController extends AbstractAction {
 	private static Logger logger = LoggerFactory.getLogger(ToolBarActionController.class);
 	
-	public static final String ACTION_BLOCK   = "block";
-	public static final String ACTION_AIR     = "air";
-	public static final String ACTION_WIRE    = "wire";
-	public static final String ACTION_TORCH   = "torch";
-	public static final String ACTION_UPDATE  = "update";
-    public static final String ACTION_REPAINT = "repaint";
+	public static final String ACTION_BLOCK     = "block";
+	public static final String ACTION_AIR       = "air";
+	public static final String ACTION_WIRE      = "wire";
+	public static final String ACTION_TORCH     = "torch";
+	public static final String ACTION_UPDATE    = "update";
+    public static final String ACTION_REPAINT   = "repaint";
+    public static final String ACTION_TOP_PLUS  = "top plus";
+    public static final String ACTION_TOP_MINUS = "top minus";
 	
 	private BlockType blockType = BlockType.AIR;
 
@@ -65,6 +67,10 @@ public class ToolBarActionController extends AbstractAction {
             } else if (cmd.equals(ACTION_REPAINT)) {
                 Director.topViewportStack.repaintCurrentViewport();
                 Director.frontViewportStack.repaintCurrentViewport();
+            } else if (cmd.equals(ACTION_TOP_PLUS)) {
+                Director.topViewportStack.nextLayer();
+            } else if (cmd.equals(ACTION_TOP_MINUS)) {
+                Director.topViewportStack.previousLayer();
             }
 			logger.debug("ActionPerformed - cmd="+cmd);
 		}

@@ -27,12 +27,10 @@ import net.fossar.model.Direction;
 import net.fossar.model.core.block.*;
 import net.fossar.model.core.clock.Clock;
 
-import net.fossar.presenter.event.DataGridEvent;
-import net.fossar.presenter.event.DataGridEventManager;
+import net.fossar.presenter.DataGridController;
+import net.fossar.presenter.event.IPresenterListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.xml.crypto.Data;
 
 public class DataGrid implements IDataGrid {
 	private Logger logger = LoggerFactory.getLogger(DataGrid.class);
@@ -41,25 +39,44 @@ public class DataGrid implements IDataGrid {
 	private int layers;
 	private DataBlock dataBlocks[][][];
 
-    private DataGridEventManager dataGridEventManager = new DataGridEventManager();
-
     private ArrayList<DataBlock> activeBlocks = new ArrayList<DataBlock>();
     private ArrayList<DataBlock> wires = new ArrayList<DataBlock>();
     private ArrayList<DataBlock> inactiveBlocks = new ArrayList<DataBlock>();
 
+    private IPresenterListener presenterListener;
 
-	public DataGrid(int rows, int cols, int layers) {
+	public DataGrid(int rows, int cols, int layers, IPresenterListener presenterListener) {
 		this.rows   = rows;
 		this.cols   = cols;
 		this.layers = layers;
+        this.presenterListener = presenterListener;
 
 		// All blocks is default to Air
 		dataBlocks = new DataBlock[rows][cols][layers];
 		for(int i=0; i<rows; i++)
 			for(int j=0; j<cols; j++)
 				for(int k=0; k<layers; k++)
-					dataBlocks[i][j][k] = new DataBlock(i, j, k, Air.INSTANCE);
+					dataBlocks[i][j][k] = createDataBlock(i, j, k, Air.INSTANCE);
 	}
+
+    public DataGrid(int rows, int cols, int layers) {
+        this(rows, cols, layers, null);
+    }
+
+    private DataBlock createDataBlock(int i, int j, int k, AbstractBlock type) {
+        DataBlock blk = new DataBlock(i, j, k, type);
+        if(presenterListener != null)
+            blk.getDataBlockManager().addPresenterListener(presenterListener);
+        return blk;
+    }
+
+    public void setPresenterListener(IPresenterListener presenterListener) {
+        this.presenterListener = presenterListener;
+        for(int i=0; i<rows; i++)
+			for(int j=0; j<cols; j++)
+				for(int k=0; k<layers; k++)
+                    dataBlocks[i][j][k].getDataBlockManager().addPresenterListener(presenterListener);
+    }
 
 	/**
 	 * Get all adjacent blocks for a given block
@@ -158,9 +175,6 @@ public class DataGrid implements IDataGrid {
 
         dataBlock.setBlock(block);
         updateDataBlockLists(dataBlock);
-
-        // Fire event
-        dataGridEventManager.notifyPresenterListeners(new DataGridEvent(dataBlock));
 	}
 
     public void add(DataBlock dataBlock) {
@@ -213,6 +227,6 @@ public class DataGrid implements IDataGrid {
     }
 
     public void addBlock(AbstractBlock block, int row, int col, int layer) {
-        add(new DataBlock(row, col, layer, block));
+        add(createDataBlock(row, col, layer, block));
 	}
 }

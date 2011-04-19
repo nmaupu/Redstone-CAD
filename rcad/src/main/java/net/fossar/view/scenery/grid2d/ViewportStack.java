@@ -17,9 +17,10 @@
 
 package net.fossar.view.scenery.grid2d;
 
+import net.fossar.model.core.block.DataBlock;
 import net.fossar.presenter.event.EventType;
 import net.fossar.presenter.event.GridViewEvent;
-import net.fossar.presenter.event.GridViewEventManager;
+import net.fossar.presenter.event.PresenterEventManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class to easily create stack of viewports
+ * Class to easily create a stack of viewports
  * User: nmaupu
  * Date: 10/04/11
  * Time: 00:05
@@ -43,7 +44,7 @@ public class ViewportStack extends JPanel implements IViewportStack, MouseInputL
 	protected List<AbstractViewport> viewports = null;
 	private CardLayout layout = new CardLayout();
 	protected int currentLayer = 0;
-    protected GridViewEventManager gridViewEventManager = new GridViewEventManager();
+    protected PresenterEventManager gridViewEventManager = new PresenterEventManager();
 
     public ViewportStack() {
 		super();
@@ -89,7 +90,7 @@ public class ViewportStack extends JPanel implements IViewportStack, MouseInputL
 		return viewports;
 	}
 
-    public GridViewEventManager getGridViewEventManager() {
+    public PresenterEventManager getGridViewEventManager() {
         return gridViewEventManager;
     }
 
@@ -145,7 +146,15 @@ public class ViewportStack extends JPanel implements IViewportStack, MouseInputL
                 gridViewEventManager.notifyPresenterListeners(new GridViewEvent(v, r, c, currentLayer, EventType.UPDATE));
             }
         }
+    }
 
+    public void repaintBlock(final DataBlock blk) {
+        AbstractViewport v = this.viewports.get(currentLayer);
+        int row = blk.getRow();
+        int col = blk.getCol();
+        int lay = blk.getLay();
+
+        gridViewEventManager.notifyPresenterListeners(new GridViewEvent(v, row, col, lay, EventType.UPDATE));
     }
 
     @Override

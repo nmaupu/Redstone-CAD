@@ -33,12 +33,14 @@ public class MainToolBar extends JToolBar implements IView {
 	private Logger logger = LoggerFactory.getLogger(MainToolBar.class);
 	
 	AbstractAction toolBarActionController = null;
-	private JButton blockButton   = new JButton();
-	private JButton airButton     = new JButton();
-	private JButton wireButton    = new JButton();
-	private JButton torchButton   = new JButton();
-	private JButton updateButton  = new JButton();
-    private JButton repaintButton = new JButton();
+	private JButton blockButton    = new JButton();
+	private JButton airButton      = new JButton();
+	private JButton wireButton     = new JButton();
+	private JButton torchButton    = new JButton();
+	private JButton updateButton   = new JButton();
+    private JButton repaintButton  = new JButton();
+    private JButton topPlusButton  = new JButton();
+    private JButton topMinusButton = new JButton();
 	
 	public MainToolBar(AbstractAction aa) {
 		super("Main tool bar");
@@ -51,6 +53,8 @@ public class MainToolBar extends JToolBar implements IView {
 		torchButton.setAction(toolBarActionController);
 		updateButton.setAction(toolBarActionController);
         repaintButton.setAction(toolBarActionController);
+        topPlusButton.setAction(toolBarActionController);
+        topMinusButton.setAction(toolBarActionController);
 				
 		// Text
 		blockButton.setText("Block");
@@ -59,6 +63,8 @@ public class MainToolBar extends JToolBar implements IView {
 		torchButton.setText("Torch");
 		updateButton.setText("Update");
         repaintButton.setText("Repaint");
+        topPlusButton.setText("Top Plus");
+        topMinusButton.setText("Top Minus");
 		
 		// Action type
 		blockButton.setActionCommand(ToolBarActionController.ACTION_BLOCK);
@@ -67,7 +73,11 @@ public class MainToolBar extends JToolBar implements IView {
 		torchButton.setActionCommand(ToolBarActionController.ACTION_TORCH);
 		updateButton.setActionCommand(ToolBarActionController.ACTION_UPDATE);
         repaintButton.setActionCommand(ToolBarActionController.ACTION_REPAINT);
+        topPlusButton.setActionCommand(ToolBarActionController.ACTION_TOP_PLUS);
+        topMinusButton.setActionCommand(ToolBarActionController.ACTION_TOP_MINUS);
 
+        this.add(topPlusButton);
+        this.add(topMinusButton);
         this.add(repaintButton);
 		this.add(updateButton);
 		this.add(airButton);

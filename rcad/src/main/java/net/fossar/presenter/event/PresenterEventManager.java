@@ -27,7 +27,7 @@ import java.util.EventListener;
  * Time: 23:55
  * To change this template use File | Settings | File Templates.
  */
-public abstract class PresenterEventManager {
+public class PresenterEventManager {
     private ArrayList<IPresenterListener> presenterListeners = new ArrayList<IPresenterListener>();
 
     public void addPresenterListener(IPresenterListener listener) {

@@ -20,9 +20,12 @@ package net.fossar.presenter.event;
 /**
  * Created by IntelliJ IDEA.
  * User: nmaupu
- * Date: 04/04/11
- * Time: 02:12
+ * Date: 19/04/11
+ * Time: 23:09
  * To change this template use File | Settings | File Templates.
  */
-public class DataGridEventManager extends PresenterEventManager {
+public class GenericEvent extends PresenterEvent {
+    public GenericEvent(Object source) {
+        super(source);
+    }
 }

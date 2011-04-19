@@ -19,12 +19,19 @@ package net.fossar.presenter;
 
 import net.fossar.model.core.DataGrid;
 import net.fossar.model.core.IDataGrid;
+import net.fossar.model.core.block.DataBlock;
+import net.fossar.presenter.event.IPresenterListener;
+import net.fossar.presenter.event.PresenterEvent;
+import net.fossar.view.scenery.grid2d.ViewportStack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class DataGridController implements IController {
+public class DataGridController implements IController, IPresenterListener {
+    private Logger logger = LoggerFactory.getLogger(DataGridController.class);
 	private static int DEFAULT_GRID_ROWS=20;
 	private static int DEFAULT_GRID_COLS=30;
 	private static int DEFAULT_GRID_LAYERS=10;
-	private DataGrid dataGrid = new DataGrid(DEFAULT_GRID_ROWS, DEFAULT_GRID_COLS, DEFAULT_GRID_LAYERS);
+	private DataGrid dataGrid = new DataGrid(DEFAULT_GRID_ROWS, DEFAULT_GRID_COLS, DEFAULT_GRID_LAYERS, this);
 	
 	public DataGridController() {
 	}
@@ -32,4 +39,16 @@ public class DataGridController implements IController {
 	public IDataGrid getDataGrid() {
 		return dataGrid;
 	}
+
+    @Override
+    public void presenterEventFired(PresenterEvent e) {
+        // If here, a block is modified
+        DataBlock blk = (DataBlock)e.getSource();
+        logger.debug("Firing Event : a block is modified - "+blk);
+
+        // Send an event to repaint corresponding views
+        for(ViewportStack v : Director.viewStacks) {
+            v.repaintBlock(blk);
+        }
+    }
 }
